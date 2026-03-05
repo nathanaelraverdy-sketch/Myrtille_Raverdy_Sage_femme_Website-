@@ -1,0 +1,125 @@
+/* ============================================
+   STYLE.CSS — Styles globaux
+   Myrtille Raverdy — Sage-femme à Lausanne
+   ============================================ */
+
+@font-face {
+    font-family: 'Unageo';
+    src: url('../Police/Unageo.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --color-primary:      #EC6164;
+    --color-primary-dark: #EC6164;
+    --color-bg-hero:      #EC6164;
+    --color-bg-light:     #E2CCCD;
+    --color-bg-section:   #E2CCCD;
+    --color-dark:         #1A1A1D;
+    --color-footer:       #1A1A1D;
+    --color-white:        #FFFFFF;
+    --color-text:         #1A1A1D;
+    --color-text-light:   #1A1A1D;
+    --color-btn-ghost:    rgba(255,255,255,0.15);
+
+    --font-body:    'Unageo', serif;
+    --font-display: 'Unageo', sans-serif;
+
+    --radius-page: 36px;
+
+    --shadow-soft: 0 4px 24px rgba(60, 30, 30, 0.10);
+    --shadow-card: 0 8px 40px rgba(60, 30, 30, 0.13);
+
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background: var(--color-bg-hero);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a   { text-decoration: none; color: inherit; }
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 48px;
+    background: var(--color-bg-hero);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--color-white);
+    letter-spacing: 0.02em;
+    margin-right: auto;
+    transition: opacity var(--transition);
+}
+.nav-brand:hover { opacity: 0.8; }
+
+/* ============================================
+   BOUTONS — Néomorphisme inset (effet bombé)
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 30px;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    border: none;
+    background: #E2CCCD;
+    color: #2C2424;
+    transition: box-shadow var(--transition), transform var(--transition);
+
+    box-shadow:
+            inset  8px   8px 18px rgba(255, 255, 255, 0.20),
+            inset -8px  -8px 18px rgba(170,  80,  75, 0.40);
+}
+
+.btn:hover {
+    box-shadow:
+            inset  10px  10px 22px rgba(255, 255, 255, 0.30),
+            inset -10px -10px 22px rgba(170,  80,  75, 0.50);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    box-shadow:
+            inset  8px   8px 18px rgba(170,  80,  75, 0.30),
+            inset -8px  -8px 18px rgba(255, 255, 255, 0.75);
+    transform: translateY(0);
+}
+
+.btn-outline { /* hérite de .btn */ }
+.btn-primary { /* hérite de .btn */ }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 600px) {
+    .navbar { padding: 16px 20px; }
+    .nav-brand { font-size: 1.05rem; }
+    .btn { padding: 10px 20px; font-size: 0.82rem; }
+}
