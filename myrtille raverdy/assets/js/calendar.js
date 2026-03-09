@@ -11,6 +11,19 @@ const CONFIG = {
     }
 };
 
+const JOURS_FERIES = [
+    '2026-01-01', // Nouvel An
+    '2026-01-02', // Berchtoldstag
+    '2026-04-03', // Vendredi Saint
+    '2026-04-06', // Lundi de Pâques
+    '2026-05-01', // Fête du Travail
+    '2026-05-14', // Ascension
+    '2026-05-25', // Lundi de Pentecôte
+    '2026-08-01', // Fête nationale
+    '2026-12-25', // Noël
+    '2026-12-26', // Saint-Étienne
+];
+
 let state = {
     currentYear:  new Date().getFullYear(),
     currentMonth: new Date().getMonth(),
@@ -25,6 +38,18 @@ const MOIS = [
     'Janvier','Février','Mars','Avril','Mai','Juin',
     'Juillet','Août','Septembre','Octobre','Novembre','Décembre'
 ];
+
+function estJourFerie(date) {
+    const iso = `${date.getFullYear()}-`
+        + `${String(date.getMonth() + 1).padStart(2, '0')}-`
+        + `${String(date.getDate()).padStart(2, '0')}`;
+    return JOURS_FERIES.includes(iso);
+}
+
+function estWeekend(date) {
+    const jour = date.getDay();
+    return jour === 0 || jour === 6;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     renderCalendar();
@@ -67,11 +92,13 @@ function renderCalendar() {
         btn.textContent = d;
 
         const isPast    = date < today;
+        const isWeekend = estWeekend(date);
+        const isFerie   = estJourFerie(date);
         const isFullOff = state.fullDayOff.some(
             off => off.toDateString() === date.toDateString()
         );
 
-        if (isPast || isFullOff) {
+        if (isPast || isWeekend || isFerie || isFullOff) {
             btn.classList.add('calendar-day--past');
             btn.disabled = true;
         } else {
@@ -198,8 +225,7 @@ function renderSlots(busySlots) {
 
     const premiere = document.querySelector('input[name="type-consultation"]:checked')?.value === 'premiere';
     const duree    = premiere ? CONFIG.DUREE_RDV_PREMIERE : CONFIG.DUREE_RDV;
-
-    const tous = [...CONFIG.CRENEAUX.matin, ...CONFIG.CRENEAUX.apresMidi];
+    const tous     = [...CONFIG.CRENEAUX.matin, ...CONFIG.CRENEAUX.apresMidi];
 
     busySlots.forEach(creneau => {
         const [h, m]  = creneau.replace('h', ':').split(':').map(Number);
@@ -208,7 +234,6 @@ function renderSlots(busySlots) {
         tous.forEach(c => {
             const [ch, cm] = c.replace('h', ':').split(':').map(Number);
             const cMin     = ch * 60 + cm;
-
             const bufferTotal = state.type === 'domicile'
                 ? duree + CONFIG.BUFFER_DOMICILE
                 : duree;
@@ -226,16 +251,17 @@ function renderSlots(busySlots) {
 
 function renderSlotGroup(containerId, creneaux, slotsOccupes) {
     const container   = document.getElementById(containerId);
+    const section     = container.closest('.slots-section');
     container.innerHTML = '';
+
     const disponibles = creneaux.filter(c => !slotsOccupes.includes(c));
 
     if (disponibles.length === 0) {
-        const tag = document.createElement('span');
-        tag.className   = 'slot-btn slot-btn--none';
-        tag.textContent = 'Aucune disponibilité';
-        container.appendChild(tag);
+        section.style.display = 'none';
         return;
     }
+
+    section.style.display = 'block';
 
     disponibles.forEach(creneau => {
         const btn = document.createElement('button');
@@ -330,6 +356,11 @@ function bindBtnReserver() {
                 headers: { 'Content-Type': 'text/plain' },
                 body:    JSON.stringify(payload)
             });
+
+            // Bloque le créneau localement pour éviter une double réservation
+            state.busySlots.push(state.selectedSlot);
+            state.selectedSlot = null;
+            renderSlots(state.busySlots);
 
             afficherConfirmation(payload);
             btnReserver.textContent = 'Réservé ✓';
