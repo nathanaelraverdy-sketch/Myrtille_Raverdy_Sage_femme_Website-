@@ -5,10 +5,9 @@ const CONFIG = {
     DUREE_RDV:          60,
     DUREE_RDV_PREMIERE: 90,
     BUFFER_DOMICILE:    20,
-    CRENEAUX: {
-        matin:     ['08h00', '09h00', '10h00', '11h00'],
-        apresMidi: ['12h00', '13h00', '14h00', '15h00', '16h00', '17h00']
-    }
+    DEBUT_JOURNEE:      9 * 60,      
+    FIN_JOURNEE:        18 * 60,    
+    INTERVALLE:         30,          
 };
 
 const JOURS_FERIES = [
@@ -17,7 +16,6 @@ const JOURS_FERIES = [
     '2026-12-25', '2026-12-26',
 ];
 
-// Stocke les événements sous forme {start: minutes, end: minutes, domicile: bool}
 let state = {
     currentYear:  new Date().getFullYear(),
     currentMonth: new Date().getMonth(),
@@ -25,6 +23,7 @@ let state = {
     selectedSlot: null,
     busyEvents:   [],
     fullDayOff:   [],
+    joursComplets: [],   // jours sans aucun créneau dispo
     type:         'cabinet',
     rdvConfirme:  false
 };
@@ -39,6 +38,12 @@ function toMinutes(heureStr) {
     return h * 60 + m;
 }
 
+function toHeureStr(minutes) {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`;
+}
+
 function estJourFerie(date) {
     const iso = `${date.getFullYear()}-`
         + `${String(date.getMonth() + 1).padStart(2, '0')}-`
@@ -51,20 +56,39 @@ function estWeekend(date) {
     return j === 0 || j === 6;
 }
 
-// Vérifie si un nouveau RDV à T (durée D, type newType) est en conflit avec un événement existant E
+function estJourComplet(date) {
+    return state.joursComplets.some(
+        d => d.toDateString() === date.toDateString()
+    );
+}
+
+// Génère tous les créneaux possibles entre DEBUT et FIN
+function genererCreneaux(dureeMin) {
+    const slots = [];
+    for (let t = CONFIG.DEBUT_JOURNEE; t + dureeMin <= CONFIG.FIN_JOURNEE; t += CONFIG.INTERVALLE) {
+        slots.push(t);
+    }
+    return slots;
+}
+
+// Vérifie si un créneau T (durée D, type newType) entre en conflit avec un événement E
 function conflit(tMin, dureeMin, newType, event) {
     const buf = CONFIG.BUFFER_DOMICILE;
 
-    // Plage effective du nouveau RDV
     const newStart = newType === 'domicile' ? tMin - buf : tMin;
     const newEnd   = newType === 'domicile' ? tMin + dureeMin + buf : tMin + dureeMin;
 
-    // Plage effective de l'événement existant
     const evStart  = event.domicile ? event.start - buf : event.start;
     const evEnd    = event.domicile ? event.end   + buf : event.end;
 
-    // Chevauchement si les plages se croisent
     return newStart < evEnd && newEnd > evStart;
+}
+
+// Calcule les créneaux disponibles pour un type de RDV donné
+function creneauxDisponibles(busyEvents, dureeMin, type) {
+    return genererCreneaux(dureeMin).filter(tMin =>
+        !busyEvents.some(ev => conflit(tMin, dureeMin, type, ev))
+    );
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -107,14 +131,13 @@ function renderCalendar() {
         btn.className   = 'calendar-day';
         btn.textContent = d;
 
-        const isPast    = date < today;
-        const isWeekend = estWeekend(date);
-        const isFerie   = estJourFerie(date);
-        const isFullOff = state.fullDayOff.some(
-            off => off.toDateString() === date.toDateString()
-        );
+        const bloque = date < today
+            || estWeekend(date)
+            || estJourFerie(date)
+            || state.fullDayOff.some(off => off.toDateString() === date.toDateString())
+            || estJourComplet(date);
 
-        if (isPast || isWeekend || isFerie || isFullOff) {
+        if (bloque) {
             btn.classList.add('calendar-day--past');
             btn.disabled = true;
         } else {
@@ -188,10 +211,10 @@ async function onDayClick(date, btn) {
     document.getElementById('panel-date').textContent = `Disponibilité pour le ${dateStr}`;
 
     showPanel();
-    await loadSlots(date);
+    await loadSlots(date, btn);
 }
 
-async function loadSlots(date) {
+async function loadSlots(date, btn) {
     if (CONFIG.API_KEY === 'VOTRE_CLE_API_ICI') {
         state.busyEvents = [];
         renderSlots([]);
@@ -213,7 +236,6 @@ async function loadSlots(date) {
         const data   = await res.json();
         const events = data.items || [];
 
-        // Journée entière bloquée ?
         const isFullDayOff = events.some(ev => !!ev.start.date && !ev.start.dateTime);
         if (isFullDayOff) {
             state.fullDayOff.push(new Date(date));
@@ -222,17 +244,33 @@ async function loadSlots(date) {
             return;
         }
 
-        // Convertit chaque événement en {start, end, domicile} en minutes
         state.busyEvents = events
             .filter(ev => !!ev.start.dateTime)
             .map(ev => {
-                const dStart = new Date(ev.start.dateTime);
-                const dEnd   = new Date(ev.end.dateTime);
+                const dStart   = new Date(ev.start.dateTime);
+                const dEnd     = new Date(ev.end.dateTime);
                 const startMin = dStart.getHours() * 60 + dStart.getMinutes();
                 const endMin   = dEnd.getHours()   * 60 + dEnd.getMinutes();
                 const isDomicile = (ev.summary || '').toLowerCase().includes('domicile');
                 return { start: startMin, end: endMin, domicile: isDomicile };
             });
+
+        // Vérifie si le jour est totalement complet pour TOUS les types de RDV
+        const dureeStd  = CONFIG.DUREE_RDV;
+        const dureePrem = CONFIG.DUREE_RDV_PREMIERE;
+        const aucunDispo =
+            creneauxDisponibles(state.busyEvents, dureeStd,  'cabinet').length === 0 &&
+            creneauxDisponibles(state.busyEvents, dureeStd,  'domicile').length === 0 &&
+            creneauxDisponibles(state.busyEvents, dureePrem, 'cabinet').length === 0 &&
+            creneauxDisponibles(state.busyEvents, dureePrem, 'domicile').length === 0;
+
+        if (aucunDispo) {
+            state.joursComplets.push(new Date(date));
+            if (btn) btn.classList.add('calendar-day--past');
+            renderCalendar();
+            hidePanel();
+            return;
+        }
 
         renderSlots(state.busyEvents);
 
@@ -245,45 +283,44 @@ async function loadSlots(date) {
 function renderSlots(busyEvents) {
     const premiere = document.querySelector('input[name="type-consultation"]:checked')?.value === 'premiere';
     const duree    = premiere ? CONFIG.DUREE_RDV_PREMIERE : CONFIG.DUREE_RDV;
-    const tous     = [...CONFIG.CRENEAUX.matin, ...CONFIG.CRENEAUX.apresMidi];
 
-    const slotsDisponibles = tous.filter(creneau => {
-        const tMin = toMinutes(creneau);
-        return !busyEvents.some(ev => conflit(tMin, duree, state.type, ev));
-    });
+    const disponibles = creneauxDisponibles(busyEvents, duree, state.type);
 
-    renderSlotGroup('slots-matin',     CONFIG.CRENEAUX.matin,     slotsDisponibles);
-    renderSlotGroup('slots-apresMidi', CONFIG.CRENEAUX.apresMidi, slotsDisponibles);
+    // Sépare matin (< 12h00) et après-midi
+    const matin     = disponibles.filter(t => t < 12 * 60);
+    const apresMidi = disponibles.filter(t => t >= 12 * 60);
+
+    renderSlotGroup('slots-matin',     matin);
+    renderSlotGroup('slots-apresMidi', apresMidi);
 }
 
-function renderSlotGroup(containerId, creneaux, slotsDisponibles) {
+function renderSlotGroup(containerId, slots) {
     const container = document.getElementById(containerId);
     const section   = container.closest('.slots-section');
     container.innerHTML = '';
 
-    const disponibles = creneaux.filter(c => slotsDisponibles.includes(c));
-
-    if (disponibles.length === 0) {
+    if (slots.length === 0) {
         section.style.display = 'none';
         return;
     }
 
     section.style.display = 'block';
 
-    disponibles.forEach(creneau => {
+    slots.forEach(tMin => {
+        const heureStr = toHeureStr(tMin);
         const btn = document.createElement('button');
         btn.className   = 'slot-btn';
-        btn.textContent = creneau;
-        btn.addEventListener('click', () => selectSlot(btn, creneau));
+        btn.textContent = heureStr;
+        btn.addEventListener('click', () => selectSlot(btn, heureStr));
         container.appendChild(btn);
     });
 }
 
-function selectSlot(btn, creneau) {
+function selectSlot(btn, heureStr) {
     document.querySelectorAll('.slot-btn--selected')
         .forEach(el => el.classList.remove('slot-btn--selected'));
     btn.classList.add('slot-btn--selected');
-    state.selectedSlot = creneau;
+    state.selectedSlot = heureStr;
 }
 
 function showPanel() { document.getElementById('rdv-panel').classList.add('visible'); }
@@ -374,7 +411,7 @@ function bindBtnReserver() {
                 body:    JSON.stringify(payload)
             });
 
-            // Ajoute le nouveau RDV localement pour bloquer le créneau immédiatement
+            // Ajoute localement pour bloquer immédiatement le créneau
             const tMin = toMinutes(state.selectedSlot);
             state.busyEvents.push({
                 start:    tMin,
