@@ -1,7 +1,7 @@
 const CONFIG = {
-    API_KEY:            'VOTRE_CLE_API_ICI',
-    CALENDAR_ID:        'VOTRE_CALENDAR_ID_ICI',
-    APPS_SCRIPT_URL:    'VOTRE_URL_APPS_SCRIPT_ICI',
+    API_KEY:            'AIzaSyAd4RDth4aGLqrxnPdeHK0ckT8I9r6QLjs',
+    CALENDAR_ID:        'nathanael.raverdy@gmail.com',
+    APPS_SCRIPT_URL:    'https://script.google.com/macros/s/AKfycbxNln1GhKA22Gz7gbp5vSp03cMOIgTm3tBXXpYeOrjiaaTRpPdfASrmUe-I3WxwIx4m/exec',
     DUREE_RDV:          60,
     DUREE_RDV_PREMIERE: 90,
     BUFFER_DOMICILE:    20,
