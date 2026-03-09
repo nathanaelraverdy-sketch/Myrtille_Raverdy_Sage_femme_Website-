@@ -12,16 +12,16 @@ const CONFIG = {
 };
 
 const JOURS_FERIES = [
-    '2026-01-01', // Nouvel An
-    '2026-01-02', // Berchtoldstag
-    '2026-04-03', // Vendredi Saint
-    '2026-04-06', // Lundi de Pâques
-    '2026-05-01', // Fête du Travail
-    '2026-05-14', // Ascension
-    '2026-05-25', // Lundi de Pentecôte
-    '2026-08-01', // Fête nationale
-    '2026-12-25', // Noël
-    '2026-12-26', // Saint-Étienne
+    '2026-01-01',
+    '2026-01-02',
+    '2026-04-03',
+    '2026-04-06',
+    '2026-05-01',
+    '2026-05-14',
+    '2026-05-25',
+    '2026-08-01',
+    '2026-12-25',
+    '2026-12-26',
 ];
 
 let state = {
@@ -31,7 +31,8 @@ let state = {
     selectedSlot: null,
     busySlots:    [],
     fullDayOff:   [],
-    type:         'cabinet'
+    type:         'cabinet',
+    rdvConfirme:  false
 };
 
 const MOIS = [
@@ -86,8 +87,8 @@ function renderCalendar() {
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
-        const date = new Date(year, month, d);
-        const btn  = document.createElement('button');
+        const date    = new Date(year, month, d);
+        const btn     = document.createElement('button');
         btn.className   = 'calendar-day';
         btn.textContent = d;
 
@@ -106,7 +107,9 @@ function renderCalendar() {
                 state.selectedDate.toDateString() === date.toDateString()) {
                 btn.classList.add('calendar-day--selected');
             }
-            btn.addEventListener('click', () => onDayClick(date, btn));
+            btn.addEventListener('click', () => {
+                if (!state.rdvConfirme) onDayClick(date, btn);
+            });
         }
 
         grid.appendChild(btn);
@@ -250,8 +253,8 @@ function renderSlots(busySlots) {
 }
 
 function renderSlotGroup(containerId, creneaux, slotsOccupes) {
-    const container   = document.getElementById(containerId);
-    const section     = container.closest('.slots-section');
+    const container = document.getElementById(containerId);
+    const section   = container.closest('.slots-section');
     container.innerHTML = '';
 
     const disponibles = creneaux.filter(c => !slotsOccupes.includes(c));
@@ -281,6 +284,14 @@ function selectSlot(btn, creneau) {
 
 function showPanel() { document.getElementById('rdv-panel').classList.add('visible'); }
 function hidePanel() { document.getElementById('rdv-panel').classList.remove('visible'); }
+
+function bloquerApresReservation() {
+    document.querySelectorAll('.slots-section').forEach(s => s.style.display = 'none');
+    document.querySelector('.rdv-form').style.display      = 'none';
+    document.querySelector('.radio-group').style.display   = 'none';
+    document.getElementById('champ-adresse').style.display = 'none';
+    state.rdvConfirme = true;
+}
 
 function afficherConfirmation(payload) {
     const dateStr  = state.selectedDate.toLocaleDateString('fr-FR',
@@ -357,11 +368,7 @@ function bindBtnReserver() {
                 body:    JSON.stringify(payload)
             });
 
-            // Bloque le créneau localement pour éviter une double réservation
-            state.busySlots.push(state.selectedSlot);
-            state.selectedSlot = null;
-            renderSlots(state.busySlots);
-
+            bloquerApresReservation();
             afficherConfirmation(payload);
             btnReserver.textContent = 'Réservé ✓';
 
