@@ -1,40 +1,167 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Myrtille Raverdy — Sage-femme à Lausanne</title>
-
+    <title>Rendez-vous — Myrtille Raverdy</title>
     <link rel="stylesheet" href="assets/css/style.css" />
-    <link rel="stylesheet" href="assets/css/home.css" />
-  </head>
-  <body>
+    <link rel="stylesheet" href="assets/css/rdv.css" />
+</head>
+<body>
 
-  <nav class="navbar">
+<nav class="navbar">
     <a href="index.html" class="nav-brand">Myrtille Raverdy</a>
     <a href="contact.html" class="btn btn-outline">Contact</a>
-  </nav>
+    <a href="index.html" class="btn btn-outline">Accueil</a>
+</nav>
 
-  <section class="hero">
+<div class="rdv-page">
 
-    <div class="hero__content">
-      <h1 class="hero__title">
-        Accompagnement bienveillant pour votre grossesse et votre post partum à Lausanne.
-      </h1>
-      <p class="hero__subtitle">
-        Je vous accompagne avec écoute, présence et compétence professionnelle afin que vous puissiez traverser cette période avec confiance, sérénité et autonomie.
-      </p>
-      <div class="hero__cta">
-        <a href="rendez-vous.html" class="btn btn-primary">Prendre rendez-vous</a>
-      </div>
+    <h1>Rendez-vous</h1>
+
+    <div class="rdv-layout">
+
+        <div class="rdv-left">
+
+            <p>Veuillez sélectionner la date à laquelle vous
+               souhaitez réserver une consultation</p>
+
+            <div class="rdv-tarifs">
+                <h3>Tarifs</h3>
+                <div class="rdv-tarif__ligne">
+                    <span>Consultation standard (1h)</span>
+                    <span>120 CHF</span>
+                </div>
+                <div class="rdv-tarif__ligne">
+                    <span>Première consultation (1h30)</span>
+                    <span>180 CHF</span>
+                </div>
+                <p class="rdv-tarif__note">
+                    Les consultations sont remboursées par la caisse maladie avec prescription médicale.
+                </p>
+            </div>
+
+            <div class="calendar-nav">
+                <button class="calendar-nav__btn" id="prev-month">&#9664;</button>
+                <span class="calendar-nav__month" id="calendar-month-label"></span>
+                <button class="calendar-nav__btn" id="next-month">&#9654;</button>
+            </div>
+
+            <div class="calendar-headers">
+                <span class="calendar-header-day">Lun</span>
+                <span class="calendar-header-day">Mar</span>
+                <span class="calendar-header-day">Mer</span>
+                <span class="calendar-header-day">Jeu</span>
+                <span class="calendar-header-day">Ven</span>
+                <span class="calendar-header-day">Sam</span>
+                <span class="calendar-header-day">Dim</span>
+            </div>
+
+            <div class="calendar-grid" id="calendar-grid"></div>
+
+        </div>
+
+        <div class="rdv-panel" id="rdv-panel">
+
+            <h2 class="rdv-panel__title" id="panel-date">Disponibilité pour le …</h2>
+
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="type-rdv" value="domicile" />
+                    À domicile
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="type-rdv" value="cabinet" checked />
+                    En cabinet
+                </label>
+            </div>
+
+            <div class="form-group" id="champ-adresse" style="display:none; margin-bottom:12px;">
+                <label for="input-adresse">Votre adresse</label>
+                <input type="text" id="input-adresse" placeholder="Rue, numéro, ville" />
+            </div>
+
+            <div class="slots-section">
+                <span class="slots-section__label">Matinée</span>
+                <div class="slots-grid" id="slots-matin"></div>
+            </div>
+
+            <div class="slots-section">
+                <span class="slots-section__label">Après-midi</span>
+                <div class="slots-grid" id="slots-apresMidi"></div>
+            </div>
+
+            <div class="rdv-form">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-nom">Nom</label>
+                        <input type="text" id="input-nom" placeholder="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="input-prenom">Prénom</label>
+                        <input type="text" id="input-prenom" placeholder="" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-email">E-mail</label>
+                    <input type="email" id="input-email" placeholder="" />
+                    <span class="error-msg" id="email-error">
+                        Veuillez entrer une adresse email valide (ex: nom@domaine.com)
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-tel">Téléphone</label>
+                    <input type="tel" id="input-tel" placeholder="" />
+                </div>
+
+                <div class="form-group">
+                    <label for="input-info">Information supplémentaire</label>
+                    <textarea id="input-info"></textarea>
+                </div>
+
+                <div class="form-radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="type-natal" value="prenatal" checked />
+                        Néo natal
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="type-natal" value="postnatal" />
+                        Post natal
+                    </label>
+                </div>
+
+                <div class="form-radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="type-consultation" value="premiere" />
+                        Première consultation (1h30)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="type-consultation" value="standard" checked />
+                        Consultation standard (1h)
+                    </label>
+                </div>
+
+                <button class="btn btn-reserver" id="btn-reserver">Réserver</button>
+
+            </div>
+
+            <div class="rdv-confirmation" id="rdv-confirmation">
+                <p id="confirmation-text"></p>
+            </div>
+
+        </div>
+
     </div>
+</div>
 
-    <div class="hero__illustration">
-      <img src="assets/images/hero-illustration.png" alt="Sage-femme et patiente" style="max-height: 500px"/>
-    </div>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/calendar.js"></script>
 
-  </section>
-
+</body>
+</html>
 
   <div class="main-content">
     <div class="deco-arrow">
