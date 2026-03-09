@@ -1,18 +1,15 @@
 const CONFIG = {
-    API_KEY:            'AIzaSyAd4RDth4aGLqrxnPdeHK0ckT8I9r6QLjs',
-    CALENDAR_ID:        'nathanael.raverdy@gmail.com',
-    APPS_SCRIPT_URL:    'https://script.google.com/macros/s/AKfycbxNln1GhKA22Gz7gbp5vSp03cMOIgTm3tBXXpYeOrjiaaTRpPdfASrmUe-I3WxwIx4m/exec',
-
+    API_KEY:            'VOTRE_CLE_API_ICI',
+    CALENDAR_ID:        'VOTRE_CALENDAR_ID_ICI',
+    APPS_SCRIPT_URL:    'VOTRE_URL_APPS_SCRIPT_ICI',
     DUREE_RDV:          60,
     DUREE_RDV_PREMIERE: 90,
     BUFFER_DOMICILE:    20,
-
     CRENEAUX: {
         matin:     ['08h00', '09h00', '10h00', '11h00'],
         apresMidi: ['12h00', '13h00', '14h00', '15h00', '16h00', '17h00']
     }
 };
-
 
 let state = {
     currentYear:  new Date().getFullYear(),
@@ -36,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     bindEmailValidation();
     bindBtnReserver();
 
-    // Recharge les créneaux si le type de consultation change
     document.querySelectorAll('input[name="type-consultation"]')
         .forEach(r => r.addEventListener('change', () => {
             if (state.selectedDate) renderSlots(state.busySlots);
@@ -200,8 +196,7 @@ async function loadSlots(date) {
 function renderSlots(busySlots) {
     let slotsOccupes = [...busySlots];
 
-    const premiere = document.querySelector('input[name="type-consultation"]:checked')
-        ?.value === 'premiere';
+    const premiere = document.querySelector('input[name="type-consultation"]:checked')?.value === 'premiere';
     const duree    = premiere ? CONFIG.DUREE_RDV_PREMIERE : CONFIG.DUREE_RDV;
 
     const tous = [...CONFIG.CRENEAUX.matin, ...CONFIG.CRENEAUX.apresMidi];
@@ -269,7 +264,7 @@ function afficherConfirmation(payload) {
     const dureeStr = payload.premiere ? '1h30 (première consultation)' : '1h';
 
     document.getElementById('confirmation-text').innerHTML =
-        `Votre rendez-vous du <strong>${dateStr} à ${payload.heure}</strong>
+        `✅ Votre rendez-vous du <strong>${dateStr} à ${payload.heure}</strong>
          <strong>${lieuStr}</strong> a bien été enregistré.<br>
          Durée : <strong>${dureeStr}</strong><br><br>
          Un email de confirmation a été envoyé à <strong>${payload.email}</strong>.`;
@@ -289,11 +284,9 @@ function bindBtnReserver() {
         const adresse  = document.getElementById('input-adresse').value.trim();
         const info     = document.getElementById('input-info').value.trim();
         const typeNatal= document.querySelector('input[name="type-natal"]:checked');
-        const premiere = document.querySelector('input[name="type-consultation"]:checked')
-            ?.value === 'premiere';
+        const premiere = document.querySelector('input[name="type-consultation"]:checked')?.value === 'premiere';
         const errorMsg = document.getElementById('email-error');
 
-        // Validations
         if (!state.selectedDate || !state.selectedSlot) {
             alert('Veuillez sélectionner une date et un créneau.');
             return;
@@ -316,8 +309,6 @@ function bindBtnReserver() {
             + `${String(state.selectedDate.getMonth() + 1).padStart(2, '0')}-`
             + `${String(state.selectedDate.getDate()).padStart(2, '0')}`;
 
-        const duree = premiere ? CONFIG.DUREE_RDV_PREMIERE : CONFIG.DUREE_RDV;
-
         const payload = {
             nom, prenom, email, tel, adresse, info,
             date:      dateISO,
@@ -325,35 +316,23 @@ function bindBtnReserver() {
             type:      state.type,
             typeNatal: typeNatal ? typeNatal.value : 'prenatal',
             premiere:  premiere,
-            duree:     duree
+            duree:     premiere ? CONFIG.DUREE_RDV_PREMIERE : CONFIG.DUREE_RDV
         };
 
         const btnReserver = document.getElementById('btn-reserver');
         btnReserver.disabled    = true;
         btnReserver.textContent = 'Envoi en cours…';
 
-        // Mode démo local — si l'URL n'est pas encore configurée
-        if (CONFIG.APPS_SCRIPT_URL === 'VOTRE_URL_APPS_SCRIPT_ICI') {
+        try {
+            await fetch(CONFIG.APPS_SCRIPT_URL, {
+                method:  'POST',
+                mode:    'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body:    JSON.stringify(payload)
+            });
+
             afficherConfirmation(payload);
             btnReserver.textContent = 'Réservé ✓';
-            return;
-        }
-
-        try {
-            const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
-                method:   'POST',
-                redirect: 'follow',       // gère la redirection 302 de Google
-                headers:  { 'Content-Type': 'text/plain' }, // évite le preflight CORS
-                body:     JSON.stringify(payload)
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                afficherConfirmation(payload);
-                btnReserver.textContent = 'Réservé ✓';
-            } else {
-                throw new Error(data.error || 'Erreur inconnue');
-            }
 
         } catch (err) {
             console.error('Erreur réservation :', err);
