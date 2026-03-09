@@ -118,7 +118,7 @@ a   { text-decoration: none; color: inherit; }
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 600px) {
+@media (max-width: 900px) {
     .navbar { padding: 16px 20px; }
     .nav-brand { font-size: 1.05rem; }
     .btn { padding: 10px 20px; font-size: 0.82rem; }

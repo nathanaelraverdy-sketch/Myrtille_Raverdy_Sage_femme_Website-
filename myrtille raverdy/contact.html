@@ -1,25 +1,94 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>Myrtille Raverdy — Sage-femme à Lausanne</title>
-        <link rel="stylesheet" href="assets/css/style.css" />
-        <link rel="stylesheet" href="assets/css/home.css" />
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Contact — Myrtille Raverdy</title>
 
-        <!-- NAVIGATION -->
-        <nav class="navbar">
-            <a href="index.html" class="nav-brand">Myrtille Raverdy</a>
-            <a href="contact.html" class="btn btn-outline">Contact</a>
-        </nav>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/contact.css" />
+</head>
+<body>
 
-        <!-- CONTENU DE LA PAGE ICI -->
-        <main>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a href="index.html" class="nav-brand">Myrtille Raverdy</a>
+    <a href="index.html" class="btn btn-outline">Accueil</a>
+</nav>
 
-        </main>
 
-        <script src="assets/js/main.js"></script>
-    </body>
+<!-- PAGE CONTACT -->
+<div class="contact-page">
+
+    <div class="contact-layout">
+
+        <!-- ============ COLONNE GAUCHE — Informations ============ -->
+        <div class="contact-info">
+
+            <h1>Informations</h1>
+
+            <div class="contact-info__block">
+                <h3>Adresse</h3>
+                <p>33 Rue du Saucisson<br>Lausanne</p>
+            </div>
+
+            <div class="contact-info__block">
+                <h3>Téléphone</h3>
+                <a href="tel:+41079895238">079 89 52 384</a>
+            </div>
+
+            <div class="contact-info__block">
+                <h3>E-mail</h3>
+                <a href="mailto:myrtille.raverdy@contact.com">
+                    myrtille.raverdy@contact.com
+                </a>
+            </div>
+
+        </div>
+
+
+        <!-- ============ COLONNE DROITE — Formulaire ============ -->
+        <div class="contact-form-section">
+
+            <h2>Contact</h2>
+
+            <div class="contact-form" id="contact-form">
+
+                <div class="contact-form__group">
+                    <label for="contact-email">Votre Email</label>
+                    <input type="email" id="contact-email" placeholder="" />
+                    <span class="contact-error" id="contact-email-error">
+                        Veuillez entrer une adresse email valide (ex: nom@domaine.com)
+                    </span>
+                </div>
+
+                <div class="contact-form__group">
+                    <label for="contact-objet">Objet</label>
+                    <input type="text" id="contact-objet" placeholder="" />
+                </div>
+
+                <div class="contact-form__group">
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" placeholder=""></textarea>
+                </div>
+
+                <button class="btn-envoyer" id="btn-envoyer">Envoyer</button>
+
+            </div>
+
+            <!-- Confirmation -->
+            <div class="contact-confirmation" id="contact-confirmation">
+                <p id="contact-confirmation-text"></p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/contact.js"></script>
+
+</body>
 </html>

@@ -1,11 +1,3 @@
-/* ============================================
-   HOME.CSS — Styles page d'accueil
-   Myrtille Raverdy — Sage-femme à Lausanne
-   ============================================ */
-
-/* ============================================
-   HERO SECTION
-   ============================================ */
 .hero {
     background: var(--color-bg-hero);
     padding: 60px 200px 100px;
@@ -22,7 +14,7 @@
 
 .hero__title {
     font-family: var(--font-display);
-    font-size: 24px;   /* fixé à 24px */
+    font-size: 24px;
     font-weight: 600;
     color: var(--color-white);
     line-height: 1.35;
@@ -37,12 +29,11 @@
     line-height: 1.7;
     margin-bottom: 36px;
     max-width: 380px;
-    opacity: 0;
     animation: fadeUp 0.7s ease forwards 0.4s;
 }
 
 .hero__cta {
-    opacity: 0;
+    font-size: 1.5rem;
     animation: fadeUp 0.7s ease forwards 0.6s;
 }
 
@@ -59,9 +50,6 @@
     width: auto;
 }
 
-/* ============================================
-   CONTENU PRINCIPAL (fond clair arrondi)
-   ============================================ */
 .main-content {
     background: var(--color-bg-light);
     border-radius: var(--radius-page) var(--radius-page) 0 0;
@@ -71,9 +59,6 @@
     z-index: 1;
 }
 
-/* ============================================
-   FLÈCHES DÉCORATIVES (images PNG)
-   ============================================ */
 .deco-arrow {
     display: flex;
     justify-content: center;
@@ -108,10 +93,6 @@
     display: flex;
     padding: 0 0 16px;
 }
-
-/* ============================================
-   SECTION QUI SUIS-JE ?
-   ============================================ */
 .section-about {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -145,9 +126,7 @@
     margin-bottom: 14px;
 }
 
-/* ============================================
-   SECTION SERVICES
-   ============================================ */
+
 .services {
     padding: 0 80px 60px;
 }
@@ -192,9 +171,7 @@
     width: auto;
 }
 
-/* ============================================
-   FOOTER
-   ============================================ */
+
 .footer {
     background: var(--color-footer);
     color: rgba(255,255,255,0.7);
@@ -218,9 +195,7 @@
 }
 .footer__right a:hover { color: var(--color-white); }
 
-/* ============================================
-   ANIMATIONS
-   ============================================ */
+
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -241,9 +216,6 @@
     transform: translateY(0);
 }
 
-/* ============================================
-   RESPONSIVE — Tablette (≤ 900px)
-   ============================================ */
 @media (max-width: 900px) {
     .hero {
         grid-template-columns: 1fr;
@@ -281,9 +253,7 @@
         gap: 24px;
     }
 }
-/* ============================================
-   Ajouts
-   ============================================ */
+
 
 .section-info__text p {
     font-size: 0.9rem;
@@ -293,9 +263,7 @@
 .img--large {
     max-height: 340px;
 }
-/* ============================================
-   RESPONSIVE — Mobile (≤ 480px)
-   ============================================ */
+
 @media (max-width: 900px) {
     .hero          { padding: 32px 20px 60px; }
     .section-about { padding: 32px 20px 48px; }
