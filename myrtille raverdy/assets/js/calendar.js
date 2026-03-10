@@ -23,7 +23,6 @@ let state = {
     selectedSlot: null,
     busyEvents:   [],
     fullDayOff:   [],
-    joursComplets: [],   // jours sans aucun créneau dispo
     type:         'cabinet',
     rdvConfirme:  false
 };
@@ -56,13 +55,6 @@ function estWeekend(date) {
     return j === 0 || j === 6;
 }
 
-function estJourComplet(date) {
-    return state.joursComplets.some(
-        d => d.toDateString() === date.toDateString()
-    );
-}
-
-// Génère tous les créneaux possibles entre DEBUT et FIN
 function genererCreneaux(dureeMin) {
     const slots = [];
     for (let t = CONFIG.DEBUT_JOURNEE; t + dureeMin <= CONFIG.FIN_JOURNEE; t += CONFIG.INTERVALLE) {
@@ -71,20 +63,15 @@ function genererCreneaux(dureeMin) {
     return slots;
 }
 
-// Vérifie si un créneau T (durée D, type newType) entre en conflit avec un événement E
 function conflit(tMin, dureeMin, newType, event) {
-    const buf = CONFIG.BUFFER_DOMICILE;
-
+    const buf      = CONFIG.BUFFER_DOMICILE;
     const newStart = newType === 'domicile' ? tMin - buf : tMin;
     const newEnd   = newType === 'domicile' ? tMin + dureeMin + buf : tMin + dureeMin;
-
     const evStart  = event.domicile ? event.start - buf : event.start;
     const evEnd    = event.domicile ? event.end   + buf : event.end;
-
     return newStart < evEnd && newEnd > evStart;
 }
 
-// Calcule les créneaux disponibles pour un type de RDV donné
 function creneauxDisponibles(busyEvents, dureeMin, type) {
     return genererCreneaux(dureeMin).filter(tMin =>
         !busyEvents.some(ev => conflit(tMin, dureeMin, type, ev))
@@ -134,8 +121,7 @@ function renderCalendar() {
         const bloque = date < today
             || estWeekend(date)
             || estJourFerie(date)
-            || state.fullDayOff.some(off => off.toDateString() === date.toDateString())
-            || estJourComplet(date);
+            || state.fullDayOff.some(off => off.toDateString() === date.toDateString());
 
         if (bloque) {
             btn.classList.add('calendar-day--past');
@@ -211,10 +197,10 @@ async function onDayClick(date, btn) {
     document.getElementById('panel-date').textContent = `Disponibilité pour le ${dateStr}`;
 
     showPanel();
-    await loadSlots(date, btn);
+    await loadSlots(date);
 }
 
-async function loadSlots(date, btn) {
+async function loadSlots(date) {
     if (CONFIG.API_KEY === 'VOTRE_CLE_API_ICI') {
         state.busyEvents = [];
         renderSlots([]);
@@ -255,23 +241,6 @@ async function loadSlots(date, btn) {
                 return { start: startMin, end: endMin, domicile: isDomicile };
             });
 
-        // Vérifie si le jour est totalement complet pour TOUS les types de RDV
-        const dureeStd  = CONFIG.DUREE_RDV;
-        const dureePrem = CONFIG.DUREE_RDV_PREMIERE;
-        const aucunDispo =
-            creneauxDisponibles(state.busyEvents, dureeStd,  'cabinet').length === 0 &&
-            creneauxDisponibles(state.busyEvents, dureeStd,  'domicile').length === 0 &&
-            creneauxDisponibles(state.busyEvents, dureePrem, 'cabinet').length === 0 &&
-            creneauxDisponibles(state.busyEvents, dureePrem, 'domicile').length === 0;
-
-        if (aucunDispo) {
-            state.joursComplets.push(new Date(date));
-            if (btn) btn.classList.add('calendar-day--past');
-            renderCalendar();
-            hidePanel();
-            return;
-        }
-
         renderSlots(state.busyEvents);
 
     } catch (err) {
@@ -283,12 +252,25 @@ async function loadSlots(date, btn) {
 function renderSlots(busyEvents) {
     const premiere = document.querySelector('input[name="type-consultation"]:checked')?.value === 'premiere';
     const duree    = premiere ? CONFIG.DUREE_RDV_PREMIERE : CONFIG.DUREE_RDV;
-
     const disponibles = creneauxDisponibles(busyEvents, duree, state.type);
 
-    // Sépare matin (< 12h00) et après-midi
     const matin     = disponibles.filter(t => t < 12 * 60);
     const apresMidi = disponibles.filter(t => t >= 12 * 60);
+
+    const aucun = disponibles.length === 0;
+
+    const sectionMatin     = document.getElementById('slots-matin').closest('.slots-section');
+    const sectionApresMidi = document.getElementById('slots-apresMidi').closest('.slots-section');
+
+    if (aucun) {
+        sectionMatin.style.display     = 'block';
+        sectionApresMidi.style.display = 'none';
+        document.getElementById('slots-matin').innerHTML =
+            `<span class="slot-btn slot-btn--none" style="width:100%; text-align:center; padding:14px 0;">
+                Aucune disponibilité pour cette journée
+            </span>`;
+        return;
+    }
 
     renderSlotGroup('slots-matin',     matin);
     renderSlotGroup('slots-apresMidi', apresMidi);
@@ -411,7 +393,6 @@ function bindBtnReserver() {
                 body:    JSON.stringify(payload)
             });
 
-            // Ajoute localement pour bloquer immédiatement le créneau
             const tMin = toMinutes(state.selectedSlot);
             state.busyEvents.push({
                 start:    tMin,
