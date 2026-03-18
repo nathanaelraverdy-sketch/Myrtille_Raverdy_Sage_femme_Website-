@@ -390,7 +390,7 @@ function validerAdresse(adresse) {
     return COMMUNES_ACCEPTEES.some(commune => adresseLower.includes(commune));
 }
 
-
+function bindBtnReserver() {
     document.getElementById('btn-reserver').addEventListener('click', async () => {
 
         const nom      = document.getElementById('input-nom').value.trim();
