@@ -364,7 +364,7 @@ function afficherConfirmation(payload) {
     const dureeStr = payload.premiere ? '1h30 (première consultation)' : '1h';
 
     document.getElementById('confirmation-text').innerHTML =
-        'Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure + '</strong> '
+        '✅ Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure + '</strong> '
         + 'à domicile (<strong>' + payload.adresse + '</strong>) a bien été enregistré.<br>'
         + 'Durée : <strong>' + dureeStr + '</strong><br><br>'
         + 'Un email de confirmation a été envoyé à <strong>' + payload.email + '</strong>.';
@@ -374,7 +374,23 @@ function afficherConfirmation(payload) {
         .scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-function bindBtnReserver() {
+const COMMUNES_ACCEPTEES = [
+    'lausanne', 'pully', 'prilly', 'renens', 'écublens', 'ecublens',
+    'chavannes', 'chavannes-près-renens', 'crissier', 'bussigny',
+    'villars-sainte-croix', 'saint-sulpice', 'lutry', 'belmont',
+    'belmont-sur-lausanne', 'paudex', 'cully', 'savigny', 'romanel',
+    'romanel-sur-lausanne', 'cheseaux', 'cheseaux-sur-lausanne',
+    'jouxtens', 'jouxtens-mézery', 'cugy', 'mex', 'bioley-orjulaz',
+    'le mont', 'le mont-sur-lausanne', 'epalinges', 'épalinges',
+    'montpreveyres', 'servion', 'mézières'
+];
+
+function validerAdresse(adresse) {
+    const adresseLower = adresse.toLowerCase();
+    return COMMUNES_ACCEPTEES.some(commune => adresseLower.includes(commune));
+}
+
+
     document.getElementById('btn-reserver').addEventListener('click', async () => {
 
         const nom      = document.getElementById('input-nom').value.trim();
@@ -400,8 +416,16 @@ function bindBtnReserver() {
             document.getElementById('input-email').focus();
             return;
         }
+        if (!tel) {
+            alert('Veuillez indiquer votre numéro de téléphone.');
+            return;
+        }
         if (!adresse) {
             alert('Veuillez indiquer votre adresse.');
+            return;
+        }
+        if (!validerAdresse(adresse)) {
+            alert('Myrtille Raverdy intervient uniquement à Lausanne et dans les communes environnantes (Pully, Prilly, Renens, Écublens, Chavannes, Crissier, Bussigny, Villars-Sainte-Croix, Saint-Sulpice, Lutry, Belmont, Paudex, Cully, Savigny).\n\nSi vous n\'êtes pas dans ces communes, contactez directement Myrtille.');
             return;
         }
 
