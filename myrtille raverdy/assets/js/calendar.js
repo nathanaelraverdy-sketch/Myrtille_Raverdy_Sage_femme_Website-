@@ -364,7 +364,7 @@ function afficherConfirmation(payload) {
     const dureeStr = payload.premiere ? '1h30 (première consultation)' : '1h';
 
     document.getElementById('confirmation-text').innerHTML =
-        '✅ Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure + '</strong> '
+        'Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure + '</strong> '
         + 'à domicile (<strong>' + payload.adresse + '</strong>) a bien été enregistré.<br>'
         + 'Durée : <strong>' + dureeStr + '</strong><br><br>'
         + 'Un email de confirmation a été envoyé à <strong>' + payload.email + '</strong>.';
