@@ -1,23 +1,48 @@
 # Myrtille_Raverdy_Sage_femme_Website-
 
+Myrtille Raverdy — Site web de sage-femme indépendante
+Site web professionnel réalisé pour une sage-femme indépendante à Lausanne (Suisse), avec un système de réservation de rendez-vous connecté à Google Agenda.
 
+Voir le site en ligne: 
 
+# Aperçu du projet
 
-myrtille raverdy/
-├── index.html              - Page d'accueil
-├── rendez-vous.html        - Page de réservation
-├── contact.html            - Page de contact
-├── Code.gs                 - Google Apps Script (backend)
-└── assets/
-    ├── css/
-    │   ├── style.css       - Variables globales, navbar, boutons
-    │   ├── home.css        - Styles page d'accueil
-    │   ├── rdv.css         - Styles page rendez-vous
-    │   └── contact.css     - Styles page contact
-    ├── js/
-    │   ├── main.js         - Animations scroll (IntersectionObserver)
-    │   ├── calendar.js     - Logique calendrier + Google Calendar API
-    │   └── contact.js      - Validation formulaire contact
-    ├── images/
-    └── police/
-        └── Unageo.ttf
+Ce projet a été développé de A à Z, du design à l'intégration backend, pour répondre aux besoins concrets d'une professionnelle de santé indépendante :
+
+- Présenter ses services et son parcours
+- Permettre aux patients de réserver une consultation en ligne
+- Automatiser les confirmations de rendez-vous par email
+- Synchroniser les réservations directement dans Google Agenda
+
+# Fonctionnalités
+
+Système de réservation
+
+Calendrier interactif avec navigation par mois, créneaux générés dynamiquement toutes les 30 minutes (9h00 – 18h00), détection automatique des conflits de créneaux en lisant les événements Google Agenda en temps réel. 
+
+Gestion du buffer de 30 minutes avant/après pour les visites à domicile
+Prise en charge des consultations standard (1h) et premières consultations (1h30)
+Blocage automatique des week-ends et jours fériés vaudois 2026
+Blocage des créneaux déjà passés dans la journée en cours
+Affichage "Aucune disponibilité" si la journée est complète
+
+#Automatisation Google Workspace
+
+Création automatique d'un événement dans Google Agenda à chaque réservation
+Deux couleurs distinctes dans l'agenda : 🟦 Cabinet / 🟥 Domicile
+Email de confirmation envoyé automatiquement au patient
+Email de notification envoyé à la sage-femme
+Intégration via Google Apps Script (sans serveur dédié)
+
+# Pages
+
+Accueil — présentation des services, parcours, sections suivi prénatal et postnatal
+Rendez-vous — calendrier de réservation avec formulaire complet
+Contact — formulaire de contact avec validation
+
+# Design
+
+Design néomorphique avec palette rose/saumon cohérente
+Police personnalisée locale (Unageo)
+Animations au scroll via IntersectionObserver
+Entièrement responsive (mobile, tablette, desktop)
