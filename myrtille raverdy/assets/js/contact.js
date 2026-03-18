@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         document.getElementById('contact-confirmation-text').innerHTML =
-            `✅ Votre message a bien été envoyé.<br>
+            `Votre message a bien été envoyé.<br>
              Myrtille vous répondra dans les plus brefs délais à <strong>${email}</strong>.`;
 
         document.getElementById('contact-confirmation').style.display = 'block';
