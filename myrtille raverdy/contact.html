@@ -4,32 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Contact — Myrtille Raverdy</title>
-
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" href="assets/css/contact.css" />
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
     <a href="index.html" class="nav-brand">Myrtille Raverdy</a>
     <a href="index.html" class="btn btn-outline">Accueil</a>
 </nav>
 
-
-<!-- PAGE CONTACT -->
 <div class="contact-page">
-
     <div class="contact-layout">
 
-        <!-- ============ COLONNE GAUCHE — Informations ============ -->
+        <!-- ============ COLONNE GAUCHE ============ -->
         <div class="contact-info">
 
             <h1>Informations</h1>
 
+            <!-- Photo -->
+            <div class="contact-photo">
+                <img src="assets/images/qui-suis-je.png" alt="Myrtille Raverdy, sage-femme" />
+            </div>
+
+            <!-- Coordonnées -->
             <div class="contact-info__block">
                 <h3>Adresse</h3>
-                <p>33 Rue du Saucisson<br>Lausanne</p>
+                <p>Cabinet à Lausanne<br>Interventions à domicile</p>
             </div>
 
             <div class="contact-info__block">
@@ -39,13 +40,56 @@
 
             <div class="contact-info__block">
                 <h3>E-mail</h3>
-                <a href="mailto:myrtille.raverdy@contact.com">
-                    myrtille.raverdy@contact.com
-                </a>
+                <a href="mailto:myrtille.raverdy@gmail.com">myrtille.raverdy@gmail.com</a>
+            </div>
+
+            <!-- Horaires -->
+            <div class="contact-info__block">
+                <h3>Horaires</h3>
+                <div class="contact-horaires">
+                    <div class="contact-horaires__ligne">
+                        <span>Lundi – Vendredi</span>
+                        <span>9h00 – 18h00</span>
+                    </div>
+                    <div class="contact-horaires__ligne">
+                        <span>Samedi – Dimanche</span>
+                        <span>Fermé</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zones d'intervention -->
+            <div class="contact-info__block">
+                <h3>Zones d'intervention</h3>
+                <p style="margin-bottom:10px;">Lausanne et communes environnantes :</p>
+                <div class="contact-zones">
+                    <span class="zone-tag">Lausanne</span>
+                    <span class="zone-tag">Pully</span>
+                    <span class="zone-tag">Prilly</span>
+                    <span class="zone-tag">Renens</span>
+                    <span class="zone-tag">Écublens</span>
+                    <span class="zone-tag">Chavannes</span>
+                    <span class="zone-tag">Crissier</span>
+                    <span class="zone-tag">Lutry</span>
+                    <span class="zone-tag">Épalinges</span>
+                    <span class="zone-tag">Le Mont</span>
+                    <span class="zone-tag">Belmont</span>
+                    <span class="zone-tag">Saint-Sulpice</span>
+                </div>
+            </div>
+
+            <!-- Carte -->
+            <div class="contact-map">
+                <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43879.41!2d6.6322734!3d46.5196535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478c29b2d75e7b41%3A0x728cf46b6c5ca5cb!2sLausanne!5e0!3m2!1sfr!2sfr!4v1710000000000!5m2!1sfr!2sfr"
+                        width="100%" height="220"
+                        style="border:0; border-radius:16px;"
+                        allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
 
         </div>
-
 
         <!-- ============ COLONNE DROITE — Formulaire ============ -->
         <div class="contact-form-section">
@@ -76,7 +120,6 @@
 
             </div>
 
-            <!-- Confirmation -->
             <div class="contact-confirmation" id="contact-confirmation">
                 <p id="contact-confirmation-text"></p>
             </div>
@@ -86,8 +129,6 @@
     </div>
 </div>
 
-
-<script src="assets/js/main.js"></script>
 <script src="assets/js/contact.js"></script>
 
 </body>
