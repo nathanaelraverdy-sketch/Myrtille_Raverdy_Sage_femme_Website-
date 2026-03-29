@@ -17,7 +17,7 @@ Ce projet a été développé de A à Z, du design à l'intégration backend, po
 
 Ce site ne collecte aucune donnée médicale.
 
-Toutefois, certaines données personnelles (nom, email, créneau de rendez-vous) peuvent être traitées dans le cadre du système de réservation.
+Toutefois, certaines données personnelles (nom, email, créneau de rendez-vous) peuvent être traitées dans le cadre du système de réservation. Les données peuvent être traitées par des services tiers conformes aux standards de sécurité de l’industrie.
 
 Ces données sont utilisées uniquement pour :
 - la gestion des rendez-vous
