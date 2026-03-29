@@ -12,9 +12,9 @@
     font-family: var(--font-display);
     font-size: 2rem;
     font-weight: 500;
-    text-align: center;
+    text-align: left;
     color: var(--color-dark);
-    margin-bottom: 40px;
+    margin-bottom: 24px;
 }
 
 .rdv-layout {
@@ -327,17 +327,30 @@
             inset -8px -8px 16px rgba(255, 255, 255, 0.15);
 }
 
-/* Message de confirmation */
-.rdv-confirmation {
-    display: none;
-    background: rgba(236, 97, 100, 0.08);
-    border: 1.5px solid var(--color-primary);
-    border-radius: 16px;
-    padding: 20px 24px;
-    text-align: center;
-    margin-top: 16px;
+
+.rdv-confirmation.visible {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    animation: fadeIn 0.4s ease;
 }
 
+.rdv-confirmation.visible #confirmation-text {
+    max-width: 560px;
+    width: 100%;
+    padding: 32px 40px;
+    border: 2px solid var(--color-primary);
+    border-radius: 16px;
+    line-height: 1.7;
+
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 .rdv-confirmation p {
     font-size: 0.9rem;
     color: var(--color-dark);
@@ -345,6 +358,7 @@
 }
 /* Tarifs */
 .rdv-tarifs {
+    margin-top: 28px;
     margin-bottom: 28px;
     padding: 20px;
     border: 1.5px solid var(--color-primary);

@@ -3,11 +3,7 @@
    Myrtille Raverdy — Sage-femme à Lausanne
    ============================================ */
 
-/**
- * SCROLL REVEAL
- * Ajoute la classe "visible" aux éléments .reveal
- * quand ils entrent dans le viewport
- */
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const revealElements = document.querySelectorAll('.reveal');

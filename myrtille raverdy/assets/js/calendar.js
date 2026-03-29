@@ -351,10 +351,8 @@ function selectSlot(btn, heureStr) {
 function showPanel() { document.getElementById('rdv-panel').classList.add('visible'); }
 function hidePanel() { document.getElementById('rdv-panel').classList.remove('visible'); }
 
+
 function bloquerApresReservation() {
-    document.querySelectorAll('.slots-section').forEach(s => s.style.display = 'none');
-    document.querySelector('.rdv-form').style.display      = 'none';
-    document.getElementById('champ-adresse').style.display = 'none';
     state.rdvConfirme = true;
 }
 
@@ -364,14 +362,15 @@ function afficherConfirmation(payload) {
     const dureeStr = payload.premiere ? '1h30 (première consultation)' : '1h';
 
     document.getElementById('confirmation-text').innerHTML =
-        '✅ Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure + '</strong> '
-        + 'à domicile (<strong>' + payload.adresse + '</strong>) a bien été enregistré.<br>'
+        'Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure+'</strong> à bien été enregistré.'+'<br><br>'
+        + 'Á domicile <strong>' + payload.adresse + '</strong><br><br>'
         + 'Durée : <strong>' + dureeStr + '</strong><br><br>'
-        + 'Un email de confirmation a été envoyé à <strong>' + payload.email + '</strong>.';
+        + '</strong>Un email de confirmation a été envoyé à <strong>' + payload.email + '</strong>.'
+        +  '</strong><br><br>' + 'Je me réjouis de vous accompagner lors de ce rendez vous.';
 
-    document.getElementById('rdv-confirmation').style.display = 'block';
-    document.getElementById('rdv-confirmation')
-        .scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelector('.rdv-layout').style.display = 'none';
+    document.getElementById('rdv-confirmation').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 const COMMUNES_ACCEPTEES = [
@@ -466,9 +465,10 @@ function bindBtnReserver() {
 
         } catch (err) {
             console.error('Erreur réservation :', err);
-            alert('Une erreur est survenue. Veuillez réessayer ou nous contacter par téléphone.');
+            alert('Une erreur est survenue. Veuillez réessayer ou me contacter par téléphone.');
             btnReserver.disabled    = false;
-            btnReserver.textContent = 'Réserver';
+
+            btnReserver.textContent = 'Confirmer mon rendez-vous';
         }
     });
 }
