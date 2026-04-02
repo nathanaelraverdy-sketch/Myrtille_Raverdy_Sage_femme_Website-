@@ -16,16 +16,13 @@
 </nav>
 
 <div class="rdv-page">
-
   <div class="rdv-layout">
 
     <div class="rdv-left">
-      <h1>
-        <h1>Rendez-vous</h1>
-      </h1>
-      <p> Un accompagnement personalisé, doux et respectueux de votre rythme.</p>
-      <p>Veuillez sélectionner la date à laquelle vous
-        souhaitez réserver une consultation</p>
+      <h1>Rendez-vous</h1>
+      <p>Un accompagnement personnalisé, doux et respectueux de votre rythme.</p>
+      <p>Veuillez sélectionner la date à laquelle vous souhaitez réserver une consultation.</p>
+
       <div class="calendar-nav">
         <button class="calendar-nav__btn" id="prev-month">&#9664;</button>
         <span class="calendar-nav__month" id="calendar-month-label"></span>
@@ -43,6 +40,7 @@
       </div>
 
       <div class="calendar-grid" id="calendar-grid"></div>
+
       <div class="rdv-tarifs">
         <h3>Tarifs</h3>
         <div class="rdv-tarif__ligne">
@@ -54,7 +52,7 @@
           <span>180 CHF</span>
         </div>
         <p class="rdv-tarif__note">
-          Les consultations peuvent remboursées selon prescription médicale.
+          Les consultations peuvent être remboursées selon prescription médicale.
         </p>
       </div>
     </div>
@@ -78,30 +76,63 @@
         <div class="form-row">
           <div class="form-group">
             <label for="input-nom">Nom</label>
-            <input type="text" id="input-nom" placeholder="" />
+            <input type="text" id="input-nom" />
           </div>
           <div class="form-group">
             <label for="input-prenom">Prénom</label>
-            <input type="text" id="input-prenom" placeholder="" />
+            <input type="text" id="input-prenom" />
           </div>
         </div>
 
         <div class="form-group">
           <label for="input-email">E-mail</label>
-          <input type="email" id="input-email" placeholder="" />
+          <input type="email" id="input-email" />
           <span class="error-msg" id="email-error">
-                        Veuillez entrer une adresse email valide (ex: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4c2223210c2823212d252229622f2321">[email&#160;protected]</a>)
-                    </span>
+            Veuillez entrer une adresse email valide (ex: nom@domaine.com)
+          </span>
         </div>
 
         <div class="form-group">
-          <label for="input-tel">Téléphone (+41)</label>
-          <input type="tel" id="input-tel" placeholder="" />
+          <label for="input-tel">Téléphone</label>
+          <input type="tel" id="input-tel" placeholder="(+41)" />
         </div>
 
-        <div class="form-group" id="champ-adresse" style="margin-bottom:12px;">
-          <label for="input-adresse">Adresse de domicile (Veuillez présiser la comune)</label>
-          <input type="text" id="input-adresse" placeholder="Rue, numéro, ville" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="input-adresse">Adresse complète</label>
+            <input type="text" id="input-adresse" placeholder="Rue et numéro" />
+          </div>
+          <div class="form-group">
+            <label for="input-commune">Commune de domicile</label>
+            <select id="input-commune" class="form-select">
+              <option value="">— Sélectionnez —</option>
+              <option value="Lausanne">Lausanne</option>
+              <option value="Pully">Pully</option>
+              <option value="Paudex">Paudex</option>
+              <option value="Belmont-sur-Lausanne">Belmont-sur-Lausanne</option>
+              <option value="Lutry">Lutry</option>
+              <option value="Cully">Cully</option>
+              <option value="Savigny">Savigny</option>
+              <option value="Servion">Servion</option>
+              <option value="Montpreveyres">Montpreveyres</option>
+              <option value="Épalinges">Épalinges</option>
+              <option value="Le Mont-sur-Lausanne">Le Mont-sur-Lausanne</option>
+              <option value="Romanel-sur-Lausanne">Romanel-sur-Lausanne</option>
+              <option value="Cheseaux-sur-Lausanne">Cheseaux-sur-Lausanne</option>
+              <option value="Jouxtens-Mézery">Jouxtens-Mézery</option>
+              <option value="Prilly">Prilly</option>
+              <option value="Renens">Renens</option>
+              <option value="Chavannes-près-Renens">Chavannes-près-Renens</option>
+              <option value="Écublens">Écublens</option>
+              <option value="Saint-Sulpice">Saint-Sulpice</option>
+              <option value="Crissier">Crissier</option>
+              <option value="Bussigny">Bussigny</option>
+              <option value="Villars-Sainte-Croix">Villars-Sainte-Croix</option>
+              <option value="Bioley-Orjulaz">Bioley-Orjulaz</option>
+              <option value="Mex">Mex</option>
+              <option value="Cugy">Cugy</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-group">
@@ -131,11 +162,26 @@
           </label>
         </div>
 
+        <label class="checkbox-label" id="label-mentions">
+          <input type="checkbox" id="accept-mentions" />
+          <span>
+            J'accepte la
+            <a href="mentions-legales.html" target="_blank" style="color:var(--color-primary);text-decoration:underline;">
+              politique de confidentialité
+            </a>
+            et le traitement de mes données personnelles dans le cadre de ce rendez-vous.
+          </span>
+        </label>
+        <span class="error-msg" id="mentions-error">
+          Veuillez accepter la politique de confidentialité pour continuer.
+        </span>
+
         <button class="btn btn-reserver" id="btn-reserver">Confirmer mon rendez-vous</button>
 
       </div>
     </div>
   </div>
+
   <div class="rdv-confirmation" id="rdv-confirmation">
     <p id="confirmation-text"></p>
   </div>

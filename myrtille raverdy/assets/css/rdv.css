@@ -5,16 +5,14 @@
     padding: 48px 60px 80px;
     position: relative;
     z-index: 1;
-
 }
 
 .rdv-page h1 {
     font-family: var(--font-display);
     font-size: 2rem;
     font-weight: 500;
-    text-align: left;
     color: var(--color-dark);
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .rdv-layout {
@@ -23,13 +21,15 @@
     gap: 80px;
     align-items: start;
 }
+
 .rdv-left p {
     font-size: 0.95rem;
     line-height: 1.6;
     color: var(--color-text);
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
+/* ── Calendrier ── */
 .calendar-nav {
     display: flex;
     align-items: center;
@@ -44,10 +44,10 @@
     color: var(--color-primary);
     font-size: 1rem;
     padding: 4px 10px;
-    transition: opacity var(--transition);
     flex-shrink: 0;
     width: 32px;
     text-align: center;
+    transition: opacity var(--transition);
 }
 .calendar-nav__btn:hover { opacity: 0.6; }
 
@@ -79,6 +79,7 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
+    margin-bottom: 28px;
 }
 
 .calendar-day {
@@ -117,9 +118,44 @@
 
 .calendar-day:not(.calendar-day--past):not(.calendar-day--selected):hover {
     background: rgba(236, 97, 100, 0.10);
-    box-shadow: none;
 }
 
+/* ── Tarifs ── */
+.rdv-tarifs {
+    margin-top: 8px;
+    padding: 20px;
+    border: 1.5px solid var(--color-primary);
+    border-radius: 16px;
+}
+
+.rdv-tarifs h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-dark);
+    margin-bottom: 12px;
+}
+
+.rdv-tarif__ligne {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(236, 97, 100, 0.2);
+}
+
+.rdv-tarif__ligne:last-of-type { border-bottom: none; }
+
+.rdv-tarif__note {
+    font-size: 0.78rem;
+    color: var(--color-text-light);
+    opacity: 0.7;
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+/* ── Panneau dispo ── */
 .rdv-panel {
     border: 1.5px solid var(--color-primary);
     border-radius: 20px;
@@ -144,47 +180,8 @@
     margin-bottom: 16px;
 }
 
-.radio-group {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 16px;
-}
-
-.radio-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    color: var(--color-dark);
-    cursor: pointer;
-}
-
-.radio-label input[type="radio"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 1.5px solid var(--color-primary);
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    flex-shrink: 0;
-    transition: all var(--transition);
-}
-
-.radio-label input[type="radio"]:checked::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px; height: 10px;
-    background: var(--color-primary);
-    border-radius: 50%;
-}
-
-
-.slots-section {
-    margin-bottom: 16px;
-}
+/* ── Créneaux ── */
+.slots-section { margin-bottom: 16px; }
 
 .slots-section__label {
     font-size: 0.85rem;
@@ -211,9 +208,8 @@
     transition: all var(--transition);
 }
 
-.slot-btn:hover {
-    background: rgba(236, 97, 100, 0.08);
-}
+.slot-btn:hover { background: rgba(236, 97, 100, 0.08); }
+
 .slot-btn--selected {
     background: var(--color-primary);
     border-color: var(--color-primary);
@@ -228,14 +224,15 @@
     color: var(--color-text-light);
     cursor: default;
     font-size: 0.8rem;
-    box-shadow: none;
     background: transparent;
 }
+
+/* ── Formulaire ── */
 .rdv-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 4px;
+    margin-top: 16px;
 }
 
 .form-row {
@@ -271,13 +268,7 @@
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
-    border-color: var(--color-primary-dark);
-}
-
-.form-group input[type="email"]:invalid:not(:placeholder-shown) {
-    border-color: #cc2222;
-}
+.form-group textarea:focus { border-color: var(--color-primary-dark); }
 
 .form-group textarea { height: 80px; }
 
@@ -285,6 +276,37 @@
     display: flex;
     gap: 24px;
     margin-top: 4px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--color-dark);
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all var(--transition);
+}
+
+.radio-label input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px; height: 10px;
+    background: var(--color-primary);
+    border-radius: 50%;
 }
 
 .error-msg {
@@ -295,6 +317,7 @@
 }
 .error-msg.visible { display: block; }
 
+/* ── Bouton réserver ── */
 .btn-reserver {
     align-self: flex-start;
     margin-top: 6px;
@@ -307,7 +330,6 @@
     font-family: var(--font-body);
     cursor: pointer;
     transition: all var(--transition);
-
     box-shadow:
             inset  5px  5px 10px rgba(255, 255, 255, 0.20),
             inset -5px -5px 10px rgba(140, 30, 30, 0.35);
@@ -320,130 +342,38 @@
             inset -6px -6px 12px rgba(140, 30, 30, 0.40);
 }
 
-.btn-reserver:active {
-    transform: translateY(0);
-    box-shadow:
-            inset  8px  8px 16px rgba(140, 30, 30, 0.40),
-            inset -8px -8px 16px rgba(255, 255, 255, 0.15);
-}
-
-
-.rdv-confirmation.visible {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 70vh;
-    animation: fadeIn 0.4s ease;
-}
-
-.rdv-confirmation.visible #confirmation-text {
-    max-width: 560px;
-    width: 100%;
-    padding: 32px 40px;
-    border: 2px solid var(--color-primary);
+/* ── Confirmation ── */
+.rdv-confirmation {
+    display: none;
+    background: rgba(236, 97, 100, 0.08);
+    border: 1.5px solid var(--color-primary);
     border-radius: 16px;
-    line-height: 1.7;
-
+    padding: 40px;
+    text-align: center;
+    margin-top: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
+.rdv-confirmation.visible { display: block; }
+
 .rdv-confirmation p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--color-dark);
-    line-height: 1.7;
-}
-/* Tarifs */
-.rdv-tarifs {
-    margin-top: 28px;
-    margin-bottom: 28px;
-    padding: 20px;
-    border: 1.5px solid var(--color-primary);
-    border-radius: 16px;
+    line-height: 1.8;
 }
 
-.rdv-tarifs h3 {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: var(--color-dark);
-    margin-bottom: 12px;
-}
-
-.rdv-tarif__ligne {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.875rem;
-    color: var(--color-text);
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(236, 97, 100, 0.2);
-}
-
-.rdv-tarif__ligne:last-of-type {
-    border-bottom: none;
-}
-
-.rdv-tarif__note {
-    font-size: 0.78rem;
-    color: var(--color-text-light);
-    opacity: 0.7;
-    margin-top: 10px;
-    line-height: 1.5;
-}
-
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.875rem;
-    color: var(--color-dark);
-    cursor: pointer;
-    margin-top: 4px;
-}
-
-.checkbox-label input[type="checkbox"] {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 1.5px solid var(--color-primary);
-    border-radius: 5px;
-    cursor: pointer;
-    flex-shrink: 0;
-    position: relative;
-    transition: all var(--transition);
-}
-
-.checkbox-label input[type="checkbox"]:checked {
-    background: var(--color-primary);
-}
-
-.checkbox-label input[type="checkbox"]:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 11px;
-    font-weight: bold;
-}
-/* ============================================
-   RESPONSIVE — Tablette (≤ 1024px)
-   ============================================ */
+/* ── Responsive ── */
 @media (max-width: 1024px) {
     .rdv-layout {
-        grid-template-columns: 340px 1fr;
-        gap: 48px;
+        grid-template-columns: 320px 1fr;
+        gap: 40px;
     }
 }
 
 @media (max-width: 768px) {
-    .rdv-page {
-        padding: 32px 20px 60px;
-    }
+    .rdv-page { padding: 32px 20px 60px; }
 
     .rdv-layout {
         grid-template-columns: 1fr;
@@ -456,7 +386,75 @@
         pointer-events: all;
     }
 
-    .form-row {
-        grid-template-columns: 1fr;
-    }
+    .form-row { grid-template-columns: 1fr; }
+}
+
+/* ── Checkbox mentions légales ── */
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--color-dark);
+    cursor: pointer;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.checkbox-label input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 1.5px solid var(--color-primary);
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all var(--transition);
+    margin-top: 2px;
+    background: transparent;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    background: var(--color-primary);
+    box-shadow:
+            inset  3px  3px 6px rgba(255, 255, 255, 0.20),
+            inset -3px -3px 6px rgba(140, 30, 30, 0.35);
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* ── Menu déroulant commune ── */
+.form-select {
+    background-color: transparent;
+    border: 1.5px solid var(--color-primary);
+    border-radius: 12px;
+    padding: 10px 36px 10px 14px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-dark);
+    outline: none;
+    width: 100%;
+    height: 42px;
+    cursor: pointer;
+    transition: border-color var(--transition);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23EC6164' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.form-select:focus {
+    border-color: var(--color-primary-dark);
 }
