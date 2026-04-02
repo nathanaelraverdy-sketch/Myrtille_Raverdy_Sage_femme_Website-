@@ -111,20 +111,37 @@ async function loadMonth(year, month) {
         const data   = await res.json();
         const events = data.items || [];
 
+        // ─── CORRECTION CONGÉS MULTI-JOURS ───────────────────────────
+        // Un congé d'une semaine a start.date + end.date (sans dateTime)
+        // On l'étale sur chaque jour de la période
         const parJour = {};
         events.forEach(ev => {
-            const key = ev.start.date || (ev.start.dateTime && ev.start.dateTime.substring(0, 10));
-            if (!key) return;
-            if (!parJour[key]) parJour[key] = [];
-            parJour[key].push(ev);
+            if (ev.start.date && ev.end.date) {
+                // Événement multi-jours — on l'ajoute à chaque jour couvert
+                const cursor  = new Date(ev.start.date);
+                const endDate = new Date(ev.end.date);
+                while (cursor < endDate) {
+                    const key = cursor.toISOString().substring(0, 10);
+                    if (!parJour[key]) parJour[key] = [];
+                    parJour[key].push(ev);
+                    cursor.setDate(cursor.getDate() + 1);
+                }
+            } else {
+                // Événement normal avec heure précise
+                const key = ev.start.dateTime && ev.start.dateTime.substring(0, 10);
+                if (!key) return;
+                if (!parJour[key]) parJour[key] = [];
+                parJour[key].push(ev);
+            }
         });
+        // ─────────────────────────────────────────────────────────────
 
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         for (let d = 1; d <= daysInMonth; d++) {
-            const date     = new Date(year, month, d);
+            const date    = new Date(year, month, d);
             if (estWeekend(date) || estJourFerie(date)) continue;
-            const key      = dateToISO(date);
-            const dayEvts  = parJour[key] || [];
+            const key     = dateToISO(date);
+            const dayEvts = parJour[key] || [];
 
             const isFullOff = dayEvts.some(ev => !!ev.start.date && !ev.start.dateTime);
             if (isFullOff) {
@@ -147,9 +164,9 @@ async function loadMonth(year, month) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     renderCalendar();
-    loadMonth(state.currentYear, state.currentMonth);
+    await loadMonth(state.currentYear, state.currentMonth);
     bindNavButtons();
     bindEmailValidation();
     bindBtnReserver();
@@ -351,7 +368,6 @@ function selectSlot(btn, heureStr) {
 function showPanel() { document.getElementById('rdv-panel').classList.add('visible'); }
 function hidePanel() { document.getElementById('rdv-panel').classList.remove('visible'); }
 
-
 function bloquerApresReservation() {
     state.rdvConfirme = true;
 }
@@ -362,31 +378,15 @@ function afficherConfirmation(payload) {
     const dureeStr = payload.premiere ? '1h30 (première consultation)' : '1h';
 
     document.getElementById('confirmation-text').innerHTML =
-        'Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure+'</strong> à bien été enregistré.'+'<br><br>'
-        + 'Á domicile <strong>' + payload.adresse + '</strong><br><br>'
+        'Votre rendez-vous du <strong>' + dateStr + ' à ' + payload.heure + '</strong> a bien été enregistré.<br><br>'
+        + 'À domicile : <strong>' + payload.adresse + '</strong><br><br>'
         + 'Durée : <strong>' + dureeStr + '</strong><br><br>'
-        + '</strong>Un email de confirmation a été envoyé à <strong>' + payload.email + '</strong>.'
-        +  '</strong><br><br>' + 'Je me réjouis de vous accompagner lors de ce rendez vous.';
+        + 'Un email de confirmation a été envoyé à <strong>' + payload.email + '</strong>.<br><br>'
+        + 'Je me réjouis de vous accompagner lors de ce rendez-vous.';
 
     document.querySelector('.rdv-layout').style.display = 'none';
     document.getElementById('rdv-confirmation').classList.add('visible');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-const COMMUNES_ACCEPTEES = [
-    'lausanne', 'pully', 'prilly', 'renens', 'écublens', 'ecublens',
-    'chavannes', 'chavannes-près-renens', 'crissier', 'bussigny',
-    'villars-sainte-croix', 'saint-sulpice', 'lutry', 'belmont',
-    'belmont-sur-lausanne', 'paudex', 'cully', 'savigny', 'romanel',
-    'romanel-sur-lausanne', 'cheseaux', 'cheseaux-sur-lausanne',
-    'jouxtens', 'jouxtens-mézery', 'cugy', 'mex', 'bioley-orjulaz',
-    'le mont', 'le mont-sur-lausanne', 'epalinges', 'épalinges',
-    'montpreveyres', 'servion', 'mézières'
-];
-
-function validerAdresse(adresse) {
-    const adresseLower = adresse.toLowerCase();
-    return COMMUNES_ACCEPTEES.some(commune => adresseLower.includes(commune));
 }
 
 function bindBtnReserver() {
@@ -396,7 +396,9 @@ function bindBtnReserver() {
         const prenom   = document.getElementById('input-prenom').value.trim();
         const email    = document.getElementById('input-email').value.trim();
         const tel      = document.getElementById('input-tel').value.trim();
-        const adresse  = document.getElementById('input-adresse').value.trim();
+        const commune  = document.getElementById('input-commune').value;
+        const rue      = document.getElementById('input-adresse').value.trim();
+        const adresse  = rue ? rue + ', ' + commune : commune;
         const info     = document.getElementById('input-info').value.trim();
         const typeNatal= document.querySelector('input[name="type-natal"]:checked');
         const premiere = document.querySelector('input[name="type-consultation"]:checked')?.value === 'premiere';
@@ -419,14 +421,22 @@ function bindBtnReserver() {
             alert('Veuillez indiquer votre numéro de téléphone.');
             return;
         }
-        if (!adresse) {
-            alert('Veuillez indiquer votre adresse.');
+        if (!commune) {
+            alert('Veuillez sélectionner votre commune.');
             return;
         }
-        if (!validerAdresse(adresse)) {
-            alert('Myrtille Raverdy intervient uniquement à Lausanne et dans les communes environnantes (Pully, Prilly, Renens, Écublens, Chavannes, Crissier, Bussigny, Villars-Sainte-Croix, Saint-Sulpice, Lutry, Belmont, Paudex, Cully, Savigny).\n\nSi vous n\'êtes pas dans ces communes, contactez directement Myrtille.');
+        if (!rue) {
+            alert('Veuillez indiquer votre rue et numéro.');
             return;
         }
+        const acceptMentions = document.getElementById('accept-mentions').checked;
+        const mentionsError  = document.getElementById('mentions-error');
+        if (!acceptMentions) {
+            mentionsError.classList.add('visible');
+            document.getElementById('accept-mentions').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        mentionsError.classList.remove('visible');
 
         const dateISO = state.selectedDate.getFullYear() + '-'
             + String(state.selectedDate.getMonth() + 1).padStart(2, '0') + '-'
@@ -467,7 +477,6 @@ function bindBtnReserver() {
             console.error('Erreur réservation :', err);
             alert('Une erreur est survenue. Veuillez réessayer ou me contacter par téléphone.');
             btnReserver.disabled    = false;
-
             btnReserver.textContent = 'Confirmer mon rendez-vous';
         }
     });
