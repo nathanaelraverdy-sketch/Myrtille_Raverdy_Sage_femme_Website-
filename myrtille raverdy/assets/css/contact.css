@@ -1,11 +1,4 @@
-/* ============================================
-   CONTACT.CSS — Page Contact
-   Myrtille Raverdy — Sage-femme à Lausanne
-   ============================================ */
 
-/* ============================================
-   LAYOUT PRINCIPAL
-   ============================================ */
 .contact-page {
     background: var(--color-bg-light);
     border-radius: var(--radius-page) var(--radius-page) 0 0;
@@ -21,10 +14,6 @@
     gap: 80px;
     align-items: start;
 }
-
-/* ============================================
-   COLONNE GAUCHE — Informations
-   ============================================ */
 .contact-info h1 {
     font-family: var(--font-display);
     font-size: 2rem;
@@ -58,9 +47,7 @@
     color: var(--color-primary);
 }
 
-/* ============================================
-   COLONNE DROITE — Formulaire
-   ============================================ */
+
 .contact-form-section h2 {
     font-family: var(--font-display);
     font-size: 2rem;
@@ -102,7 +89,6 @@
     resize: none;
 }
 
-/* Le textarea a des coins moins arrondis */
 .contact-form__group textarea {
     border-radius: 20px;
     height: 220px;
@@ -114,7 +100,6 @@
     border-color: var(--color-primary-dark);
 }
 
-/* Validation email */
 .contact-form__group input[type="email"]:invalid:not(:placeholder-shown) {
     border-color: #cc2222;
 }
@@ -128,7 +113,7 @@
 }
 .contact-error.visible { display: block; }
 
-/* Bouton Envoyer — néomorphisme rouge permanent */
+
 .btn-envoyer {
     align-self: flex-start;
     margin-top: 4px;
@@ -160,7 +145,7 @@
             inset -8px -8px 16px rgba(255, 255, 255, 0.15);
 }
 
-/* Message de confirmation */
+
 .contact-confirmation {
     display: none;
     background: rgba(236, 97, 100, 0.08);
@@ -176,9 +161,11 @@
     line-height: 1.7;
 }
 
-/* ============================================
+/*
+============================================
    RESPONSIVE — Tablette (≤ 900px)
-   ============================================ */
+============================================
+*/
 @media (max-width: 900px) {
     .contact-page {
         padding: 48px 40px 60px;
@@ -246,7 +233,6 @@
     background: rgba(236, 97, 100, 0.06);
 }
 
-/* Carte */
 .contact-map {
     margin-top: 28px;
     border-radius: 16px;

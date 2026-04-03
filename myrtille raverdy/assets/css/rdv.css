@@ -100,8 +100,8 @@
 }
 
 .calendar-day--past {
-    background: #B8AAAA;
-    border-color: #B8AAAA;
+    background: #C0BCC8;
+    border-color: #C0BCC8;
     color: rgba(255,255,255,0.75);
     cursor: not-allowed;
     box-shadow: none;

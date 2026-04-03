@@ -11,11 +11,11 @@
 }
 
 :root {
-    --color-primary:      #EC6164;
-    --color-primary-dark: #EC6164;
-    --color-bg-hero:      #EC6164;
-    --color-bg-light:     #E2CCCD;
-    --color-bg-section:   #E2CCCD;
+    --color-primary:      #A888E0;
+    --color-primary-dark: #A888E0;
+    --color-bg-hero:      #A888E0;
+    --color-bg-light:     #EDE8F7;
+    --color-bg-section:   #EDE8F7;
     --color-dark:         #1A1A1D;
     --color-footer:       #1A1A1D;
     --color-white:        #FFFFFF;
@@ -89,7 +89,7 @@ a   { text-decoration: none; color: inherit; }
     letter-spacing: 0.01em;
     cursor: pointer;
     border: none;
-    background: #E2CCCD;
+    background: #EDE8F7;
     color: #2C2424;
     transition: box-shadow var(--transition), transform var(--transition);
 
