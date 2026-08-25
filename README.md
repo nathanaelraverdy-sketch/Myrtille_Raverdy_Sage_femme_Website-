@@ -1,6 +1,6 @@
-# Myrtille_Raverdy_Sage_femme_Website-
+# Myrtille Raverdy Sage-Femme
 
-Myrtille Raverdy — Site web de sage-femme indépendante
+Myrtille Raverdy; Site web de sage-femme indépendante
 Site web professionnel réalisé pour une sage-femme indépendante à Lausanne (Suisse), avec un système de réservation de rendez-vous connecté à Google Agenda.
 
 Voir le site en ligne: 
