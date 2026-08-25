@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error('Erreur envoi contact :', err);
-            alert('Une erreur est survenue. Veuillez réessayer ou nous contacter directement par email.');
+            alert('Une erreur est survenue. Veuillez réessayer ou nous contacter directement par email via myrtille.raverdy@gmail.com.');
             btnEnvoyer.disabled    = false;
             btnEnvoyer.textContent = 'Envoyer';
         }

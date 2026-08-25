@@ -64,6 +64,9 @@ a   { text-decoration: none; color: inherit; }
 }
 
 .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     font-family: var(--font-display);
     font-size: 1.3rem;
     font-weight: 500;
@@ -73,6 +76,11 @@ a   { text-decoration: none; color: inherit; }
     transition: opacity var(--transition);
 }
 .nav-brand:hover { opacity: 0.8; }
+.nav-brand__logo {
+    height: 32px;
+    width: auto;
+    display: block;
+}
 
 /* ============================================
    BOUTONS — Néomorphisme inset (effet bombé)
