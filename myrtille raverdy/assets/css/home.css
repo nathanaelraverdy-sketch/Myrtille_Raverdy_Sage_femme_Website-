@@ -210,8 +210,8 @@
 
 .two-columns {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 48px;
     padding: 20px 80px 60px;
 }
 
