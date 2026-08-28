@@ -76,6 +76,17 @@ a   { text-decoration: none; color: inherit; }
     transition: opacity var(--transition);
 }
 .nav-brand:hover { opacity: 0.8; }
+.nav-cta {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.nav-cta.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
 .nav-brand__logo {
     height: 32px;
     width: auto;
@@ -130,4 +141,83 @@ a   { text-decoration: none; color: inherit; }
     .navbar { padding: 16px 20px; }
     .nav-brand { font-size: 1.05rem; }
     .btn { padding: 10px 20px; font-size: 0.82rem; }
+}
+
+/* ============================================
+   LIGHTBOX — Agrandissement d'image au clic
+   ============================================ */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 20, 40, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+}
+.lightbox-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.lightbox-overlay img {
+    max-width: 90vw;
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    border-radius: var(--radius-page);
+    box-shadow: var(--shadow-card);
+}
+.lightbox-overlay__close {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    color: var(--color-white);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+.lightbox-overlay__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-white);
+    padding: 0;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.25);
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition);
+}
+.lightbox-overlay__nav svg {
+    display: block;
+}
+.lightbox-overlay__nav--prev svg { margin-right: 2px; }
+.lightbox-overlay__nav--next svg { margin-left: 2px; }
+.lightbox-overlay__nav:hover {
+    background: rgba(0, 0, 0, 0.45);
+}
+.lightbox-overlay__nav--prev { left: 16px; }
+.lightbox-overlay__nav--next { right: 16px; }
+@media (max-width: 600px) {
+    .lightbox-overlay__nav {
+        width: 44px;
+        height: 44px;
+    }
+    .lightbox-overlay__nav svg {
+        width: 18px;
+        height: 18px;
+    }
+    .lightbox-overlay__nav--prev { left: 8px; }
+    .lightbox-overlay__nav--next { right: 8px; }
 }

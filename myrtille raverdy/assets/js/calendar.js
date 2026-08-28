@@ -5,10 +5,25 @@ const CONFIG = {
     DUREE_RDV:          60,
     DUREE_RDV_PREMIERE: 90,
     BUFFER_DOMICILE:    30,
-    DEBUT_JOURNEE:      9 * 60,
-    FIN_JOURNEE:        18 * 60,
     INTERVALLE:         30,
 };
+
+// Horaires d'ouverture par jour de la semaine (0 = dimanche ... 6 = samedi)
+// Lundi, Mardi, Jeudi, Vendredi : 9h30 - 16h00
+// Mercredi : 9h30 - 11h30
+// Samedi, Dimanche : fermé
+const HORAIRES_JOUR = {
+    1: { debut: 9 * 60 + 30, fin: 16 * 60 },       // Lundi
+    2: { debut: 9 * 60 + 30, fin: 16 * 60 },       // Mardi
+    3: { debut: 9 * 60 + 30, fin: 11 * 60 + 30 },  // Mercredi
+    4: { debut: 9 * 60 + 30, fin: 16 * 60 },       // Jeudi
+    5: { debut: 9 * 60 + 30, fin: 16 * 60 },       // Vendredi
+};
+
+function horairesJour(date) {
+    if (!date) return { debut: 9 * 60 + 30, fin: 16 * 60 };
+    return HORAIRES_JOUR[date.getDay()] || null;
+}
 
 const JOURS_FERIES = [
     '2026-01-01', '2026-01-02', '2026-04-03', '2026-04-06',
@@ -55,9 +70,11 @@ function estWeekend(date)    { const j = date.getDay(); return j === 0 || j === 
 function estFullDayOff(date) { return state.fullDayOff.some(d => d.toDateString() === date.toDateString()); }
 function estJourComplet(date){ return state.joursComplets.some(d => d.toDateString() === date.toDateString()); }
 
-function genererCreneaux(dureeMin) {
+function genererCreneaux(dureeMin, date) {
+    const horaires = horairesJour(date);
+    if (!horaires) return [];
     const slots = [];
-    for (let t = CONFIG.DEBUT_JOURNEE; t + dureeMin <= CONFIG.FIN_JOURNEE; t += CONFIG.INTERVALLE) {
+    for (let t = horaires.debut; t + dureeMin <= horaires.fin; t += CONFIG.INTERVALLE) {
         slots.push(t);
     }
     return slots;
@@ -76,7 +93,7 @@ function creneauxDisponibles(busyEvents, dureeMin, type, date) {
     const now        = new Date();
     const isToday    = date && date.toDateString() === now.toDateString();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
-    return genererCreneaux(dureeMin).filter(tMin => {
+    return genererCreneaux(dureeMin, date).filter(tMin => {
         if (isToday && tMin <= nowMinutes) return false;
         return !busyEvents.some(ev => conflit(tMin, dureeMin, type, ev));
     });
