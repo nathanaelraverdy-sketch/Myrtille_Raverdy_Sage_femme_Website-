@@ -4,22 +4,51 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Myrtille Raverdy — Sage-femme à Lausanne</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/css/home.css" />
+  <link rel="stylesheet" href="assets/css/style.css?v=7" />
+  <link rel="stylesheet" href="assets/css/home.css?v=7" />
   <link rel="icon" type="image/png" href="assets/images/logo-colibri-dark.png" />
 </head>
 <body>
 
 <nav class="navbar">
   <a href="index.html" class="nav-brand"><img src="assets/images/logo-colibri-white.png" alt="" class="nav-brand__logo" />Myrtille Raverdy</a>
-  <a href="rendez-vous.html" class="btn btn-primary nav-cta" id="nav-cta">Prendre rendez-vous</a>
+  <a href="rendez-vous.html" class="btn btn-primary nav-cta" id="nav-cta"><span class="nav-cta__full">Prendre rendez-vous</span><span class="nav-cta__short">Rendez-vous</span></a>
   <a href="contact.html" class="btn btn-outline">Contact</a>
 </nav>
 
 <section class="hero">
+  <div class="hero-gallery" id="hero-gallery" aria-roledescription="carrousel" aria-label="Photos de consultations">
+    <div class="hero-gallery__stage">
+      <div class="hero-gallery__ring">
+        <!-- ordre choisi pour ne pas placer côte à côte deux photos de la même scène -->
+        <img src="assets/images/galerie/photo-06.jpg" alt="Myrtille porte un nouveau-né contre son épaule" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-01.jpg" alt="Myrtille tient un nouveau-né sur ses genoux" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-02.jpg" alt="Nouveau-né allongé sur un tapis coloré" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-08.jpg" alt="Myrtille auprès d'un nouveau-né" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-09.jpg" alt="Pesée du bébé" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-11.jpg" alt="Nouveau-né lové dans les bras" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-10.jpg" alt="Examen du nouveau-né sur les genoux" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-04.jpg" alt="Habillage du nouveau-né" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-14.jpg" alt="Myrtille auprès d'un nouveau-né sur le canapé" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-12.jpg" alt="Pesée du bébé à domicile" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-03.jpg" alt="Soin au nouveau-né" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-05.jpg" alt="Consultation à domicile" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-15.jpg" alt="Nouveau-né examiné sur un tapis" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-07.jpg" alt="Examen du nouveau-né" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-16.jpg" alt="Myrtille habille un nouveau-né" class="hero-gallery__item" />
+        <img src="assets/images/galerie/photo-13.jpg" alt="Soin au nouveau-né sur les genoux" class="hero-gallery__item" />
+        <img src="assets/images/ImageSageFemme.jpg" alt="Myrtille Raverdy, sage-femme" class="hero-gallery__item" />
+      </div>
+    </div>
+  </div>
+
   <div class="hero__content">
+    <!-- composition centrée « en triangle » : chaque ligne un peu plus large
+         que la précédente, sous la photo centrale du carrousel -->
     <h1 class="hero__title">
-      Accompagnement bienveillant à Lausanne, de la grossesse au post-partum.
+      <span class="hero__title-line">Accompagnement</span>
+      <span class="hero__title-line">bienveillant à Lausanne,</span>
+      <span class="hero__title-line">de la grossesse au post-partum.</span>
     </h1>
     <p class="hero__subtitle">
       Je vous accompagne avec attention, présence et compétence, pour vous permettre d'avancer en confiance, avec sérénité, et de trouver votre propre rythme.
@@ -28,15 +57,10 @@
       <a href="rendez-vous.html" class="btn btn-primary" id="hero-cta">Prendre rendez-vous</a>
     </div>
   </div>
-  <div class="hero__illustration">
-    <img src="assets/images/hero-illustration.png" alt="Sage-femme et patiente" style="max-height: 500px"/>
-  </div>
 </section>
 
 <div class="main-content">
-  <div class="deco-arrow">
-    <img src="assets/images/Vector%201.png" alt="" />
-  </div>
+  <div class="flow-arrow flow-arrow--onload" aria-hidden="true"><img src="assets/images/fleche-courbe.svg" alt="" /></div>
 
   <section class="section-about">
     <div class="section-about__illustration reveal">
@@ -57,9 +81,10 @@
     </div>
   </section>
 
+  <div class="flow-arrow" aria-hidden="true"><img src="assets/images/fleche-boucle.svg" alt="" /></div>
+
   <section class="services">
-    <div class="service-block service-block--single reveal">
-      <img src="assets/images/fleche-suivi.png" alt="" class="deco-arrow-pre" />
+    <div class="service-block service-block--intro reveal">
       <div class="service-block__text">
         <h3>Prestations</h3>
         <h2>Suivi préconceptionnel</h2>
@@ -69,51 +94,52 @@
         <p>
           Mon approche vise à préparer le terrain à la conception en travaillant sur l'alimentation, l'hygiène de vie, l'équilibre global et les éventuelles carences, afin de favoriser des conditions propices à une future grossesse.
         </p>
-
-        <h2>Suivi pré natal</h2>
-        <p>
-          Chaque consultation est un temps d'échange, pour suivre l'évolution de votre grossesse, répondre à vos questions et vous aider à vivre cette période avec plus de sérénité.
-        </p>
-        <p>
-          Je vous accompagne également dans la préparation à la naissance, en respectant votre rythme, vos choix et votre vécu.
-        </p>
-        <p>
-          Si vous le souhaitez, j'intègre des approches complémentaires comme le LineQuartz, une méthode douce basée sur les vibrations sonores, utilisée pour favoriser la détente, relâcher les tensions et accompagner le corps dans la préparation à la naissance.
-        </p>
-        <p>
-          Ces approches s'inscrivent toujours dans un suivi global, adapté à votre situation, dans un cadre respectueux et sécurisant.
-        </p>
-      </div>
-    </div>
-
-    <div class="deco-arrow2 deco-arrow--between deco-arrow--flip">
-      <img src="assets/images/Vector%202.png" alt="" />
-    </div>
-
-    <div class="service-block service-block--reverse reveal">
-      <div class="service-block__text service-block--reverse">
-        <h2>Le suivi post-natal</h2>
-        <p>
-          Après la naissance, je vous accompagne avec douceur et bienveillance dans cette période de transition, souvent intense et pleine de changements.
-        </p>
-        <p>
-          Les consultations permettent de soutenir votre récupération, de répondre à vos questions et de vous accompagner dans les premiers jours avec votre bébé.
-        </p>
-        <p>
-          Je vous propose un accompagnement personnalisé autour de l'allaitement, du lien avec votre enfant et de votre nouvelle organisation, en respectant votre rythme et vos choix.
-        </p>
-        <p>
-          Je reste également attentive à votre état de santé et à celui de votre bébé, afin d'identifier si nécessaire certaines situations qui pourraient bénéficier d'un accompagnement ou d'une orientation spécifique.
-        </p>
-        <p>
-          Mon objectif est de vous offrir un espace sécurisant, où vous pouvez vous sentir écoutée, soutenue et accompagnée en toute confiance.
-        </p>
       </div>
       <div class="service-block__illustration">
-        <img src="assets/images/qui-suis-je.png" alt="Suivi post-natal" style="max-height: 500px" />
+        <img src="assets/images/galerie/photo-01.jpg" alt="Myrtille avec un nouveau-né" class="service-block__photo lightbox-img" />
+      </div>
+    </div>
+
+    <div class="flow-arrow flow-arrow--mirror" aria-hidden="true"><img src="assets/images/fleche-courbe.svg" alt="" /></div>
+
+    <div class="service-block service-block--pair reveal">
+      <div class="service-sub">
+          <h2>Suivi pré natal</h2>
+          <p>
+            Chaque consultation est un temps d'échange, pour suivre l'évolution de votre grossesse, répondre à vos questions et vous aider à vivre cette période avec plus de sérénité.
+          </p>
+          <p>
+            Je vous accompagne également dans la préparation à la naissance, en respectant votre rythme, vos choix et votre vécu.
+          </p>
+          <p>
+            Si vous le souhaitez, j'intègre des approches complémentaires comme le LineQuartz, une méthode douce basée sur les vibrations sonores, utilisée pour favoriser la détente, relâcher les tensions et accompagner le corps dans la préparation à la naissance.
+          </p>
+          <p>
+            Ces approches s'inscrivent toujours dans un suivi global, adapté à votre situation, dans un cadre respectueux et sécurisant.
+          </p>
+      </div>
+      <div class="service-sub">
+          <h2>Le suivi post-natal</h2>
+          <p>
+            Après la naissance, je vous accompagne avec douceur et bienveillance dans cette période de transition, souvent intense et pleine de changements.
+          </p>
+          <p>
+            Les consultations permettent de soutenir votre récupération, de répondre à vos questions et de vous accompagner dans les premiers jours avec votre bébé.
+          </p>
+          <p>
+            Je vous propose un accompagnement personnalisé autour de l'allaitement, du lien avec votre enfant et de votre nouvelle organisation, en respectant votre rythme et vos choix.
+          </p>
+          <p>
+            Je reste également attentive à votre état de santé et à celui de votre bébé, afin d'identifier si nécessaire certaines situations qui pourraient bénéficier d'un accompagnement ou d'une orientation spécifique.
+          </p>
+          <p>
+            Mon objectif est de vous offrir un espace sécurisant, où vous pouvez vous sentir écoutée, soutenue et accompagnée en toute confiance.
+          </p>
       </div>
     </div>
   </section>
+
+  <div class="flow-arrow flow-arrow--mirror" aria-hidden="true"><img src="assets/images/fleche-boucle.svg" alt="" /></div>
 
   <section class="two-columns reveal">
     <div class="two-columns__col">
@@ -121,9 +147,10 @@
       <p>
         "Naitre en chantant" est une préparation à la naissance basée sur le chant, la respiration et les vibrations de la voix, favorisant la connexion avec son bébé et la confiance en soi pour donner naissance.
       </p>
-      <img src="assets/images/Image lumino 1.jpeg" alt="La psychophonie" class="two-columns__img lightbox-img" />
     </div>
-    <div class="two-columns__col">
+    <div class="flow-arrow flow-arrow--mirror flow-arrow--mobile" aria-hidden="true"><img src="assets/images/fleche-boucle.svg" alt="" /></div>
+    <div class="flow-arrow flow-arrow--grid" aria-hidden="true"><img src="assets/images/fleche-courbe.svg" alt="" /></div>
+    <div class="two-columns__col two-columns__col--linequartz">
       <h2>LineQuartz®</h2>
       <p>
         Appareil de bio-résonance utilisé pour favoriser l'équilibre global de l'organisme. Il associe la luminothérapie, la chromothérapie, la musicothérapie et la lithothérapie (quartz) pour favoriser détente et équilibre. Aussi bien en prénatal qu'après la naissance cette technologie innovante est un véritable atout.
@@ -133,7 +160,11 @@
         Site internet du fabriquant :
         <a href="https://www.linequartz.com" target="_blank" rel="noopener">Accueil | LineQuartz</a>.
       </p>
-      <img src="assets/images/Image lumino 2.jpeg" alt="LineQuartz" class="two-columns__img lightbox-img" />
+      <div class="linequartz-gallery">
+        <img src="assets/images/Image lumino 1.jpeg" alt="Séance LineQuartz" class="lightbox-img" />
+        <img src="assets/images/Image lumino 2.jpeg" alt="Séance LineQuartz" class="lightbox-img" />
+        <img src="assets/images/Image lumino 3.jpeg" alt="Séance LineQuartz" class="lightbox-img" />
+      </div>
     </div>
     <div class="two-columns__col">
       <h2>MILTA</h2>
@@ -143,38 +174,48 @@
       <p>
         <a href="https://www.milta.fr/application/gynecologique/" target="_blank" rel="noopener">Application | MILTA</a>.
       </p>
-      <img src="assets/images/Image lumino 3.jpeg" alt="MILTA" class="two-columns__img lightbox-img" />
     </div>
   </section>
-
-  <div class="two-columns__mobile-stack">
-    <img src="assets/images/Image lumino 1.jpeg" alt="La psychophonie" class="lightbox-img" />
-    <img src="assets/images/Image lumino 2.jpeg" alt="LineQuartz" class="lightbox-img" />
-    <img src="assets/images/Image lumino 3.jpeg" alt="MILTA" class="lightbox-img" />
-  </div>
 </div>
 
-<footer class="footer">
-  <div class="footer__left">
-    <p>Je vous accueille à Lausanne et dans sa région, en cabinet ou à domicile, selon vos besoins.</p>
-    <p>Les consultations sont remboursées selon prescription médicale.</p>
-    <p style="margin-top: 16px;">Téléphone :(+41) 079 895 23 84</p>
-    <p>Email : myrtille.raverdy@gmail.com</p>
-    <p>Les informations présentes sur ce site ont une valeur informative et ne remplacent pas une consultation médicale.</p>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <a href="index.html" class="site-footer__logo"><img src="assets/images/logo-colibri-white.png" alt="" />Myrtille Raverdy</a>
+      <p>Sage-femme indépendante diplômée. Je vous accueille à Lausanne et dans sa région, en cabinet ou à domicile, de la grossesse au post-partum.</p>
+      <a href="rendez-vous.html" class="site-footer__cta">Prendre rendez-vous <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Contact</h2>
+      <ul>
+        <li><a href="tel:+41798952384">(+41) 079 895 23 84</a></li>
+        <li><a href="mailto:myrtille.raverdy@gmail.com">myrtille.raverdy@gmail.com</a></li>
+        <li>Lausanne et région</li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Navigation</h2>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="rendez-vous.html">Rendez-vous</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>Les consultations sont remboursées selon prescription médicale. Les informations présentes sur ce site ont une valeur informative et ne remplacent pas une consultation médicale.</p>
+      <p>© 2025–2026 Myrtille Raverdy · Exercice libéral en Suisse · Site : Nathanael Raverdy · Images : Gstudioimagen</p>
+    </div>
   </div>
-  <div class="footer__right">
-    <p>Myrtille Raverdy – Sage-femme indépendante diplômée</p>
-    <p>Exercice libéral en Suisse</p>
-    <p>© 2025–2026 Myrtille Raverdy</p>
-    <p>Création du siteweb: Nathanael Raverdy</p>
-    <p>Images par: Gstudioimagen</p>
-    <p style="margin-top: 12px;">
-      <a href="mentions-legales.html">Mentions légales</a>
-    </p>
-  </div>
+
 </footer>
 
-<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js?v=7"></script>
+<script src="assets/js/colibri.js?v=7"></script>
+<script src="assets/js/hero-gallery.js?v=7"></script>
 
 </body>
 </html>

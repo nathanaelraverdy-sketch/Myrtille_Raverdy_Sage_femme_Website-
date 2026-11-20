@@ -52,10 +52,11 @@
 
 .main-content {
     background: var(--color-bg-light);
-    border-radius: var(--radius-page) var(--radius-page) 0 0;
+    border-radius: var(--radius-page);
     margin-top: -30px;
     padding-bottom: 80px;
     position: relative;
+    box-shadow: var(--shadow-page);
     z-index: 1;
 }
 
@@ -278,28 +279,6 @@
 }
 
 
-.footer {
-    background: var(--color-footer);
-    color: rgba(255,255,255,0.7);
-    padding: 48px 80px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-}
-
-.footer__left p,
-.footer__right p {
-    font-size: 0.82rem;
-    line-height: 1.8;
-    margin-bottom: 6px;
-}
-
-.footer__right a {
-    color: rgba(255,255,255,0.5);
-    text-decoration: underline;
-    transition: color var(--transition);
-}
-.footer__right a:hover { color: var(--color-white); }
 
 
 @keyframes fadeUp {
@@ -353,11 +332,6 @@
     }
     .service-block--reverse { direction: ltr; }
 
-    .footer {
-        grid-template-columns: 1fr;
-        padding: 40px 32px;
-        gap: 24px;
-    }
 }
 
 
@@ -374,7 +348,6 @@
     .hero          { padding: 32px 20px 60px; }
     .section-about { padding: 32px 20px 48px; }
     .services      { padding: 0 20px 32px; }
-    .footer        { padding: 32px 20px; }
     .two-columns   { grid-template-columns: 1fr; gap: 32px; padding: 0 20px 40px; }
     .two-columns__img { display: none; }
     .two-columns__mobile-stack {
@@ -434,4 +407,467 @@
     .deco-arrow img {
         transform: rotate(30deg);
     }
+}
+
+/* ============================================
+   HERO — Carrousel photo incurvé (3D)
+   ============================================ */
+.hero {
+    /* Le haut de page remplit l'écran sous la navbar, moins de quoi laisser
+       voir tout juste la flèche de la section suivante (pas son texte) :
+       incite à scroller. Le carrousel prend la place que le texte lui laisse
+       (hero-gallery.js dimensionne les photos d'après cette place).
+       --nav-h : hauteur de la navbar ; --peek : hauteur visible de la section
+       suivante (marge + flèche) ; +30px : la section suivante remonte de 30px. */
+    --nav-h: 85px;
+    --peek: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* espace carrousel / titre (le carrousel déborde dessus, voir plus bas) */
+    padding: 12px 0 44px;
+    min-height: calc(100vh - var(--nav-h) - var(--peek) + 30px);
+    min-height: calc(100svh - var(--nav-h) - var(--peek) + 30px);
+}
+
+.hero .hero__content {
+    /* composition centrée « en triangle » sous le carrousel :
+       titre qui s'élargit ligne après ligne, paragraphe un peu plus large,
+       bouton au centre */
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hero .hero__title {
+    font-size: clamp(1.75rem, 1.1rem + 1.6vw, 2.5rem);
+    line-height: 1.18;
+    margin-bottom: 18px;
+    text-wrap: balance;
+}
+
+/* une ligne par span : courte, moyenne, longue = forme de triangle */
+.hero__title-line { display: block; white-space: nowrap; }
+
+.hero .hero__subtitle {
+    max-width: 600px;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    margin: 0 0 24px;
+    text-wrap: balance;
+}
+
+.hero .hero__cta { font-size: 1rem; margin: 0; }
+
+/* bouton du hero : s'efface quand il arrive sous la navbar,
+   réapparaît (après le départ du bouton de la navbar) en remontant */
+#hero-cta {
+    transition:
+        opacity 0.4s ease 0.15s,
+        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s,
+        filter 0.4s ease 0.15s,
+        box-shadow 0.25s ease;
+}
+#hero-cta.is-docked {
+    opacity: 0;
+    transform: scale(0.85);
+    filter: blur(6px);
+    pointer-events: none;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        filter 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.hero-gallery {
+    /* occupe la hauteur restante du haut de page ; tailles de départ des
+       photos, remplacées par hero-gallery.js selon la place disponible */
+    flex: 1 1 0;
+    min-height: 140px;
+    width: 100%;
+    --card-w: clamp(140px, min(14.5vw, 20vh), 250px);
+    --card-h: clamp(170px, min(18vw, 25vh), 310px);
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.9s ease forwards 0.3s;
+}
+
+.hero-gallery__stage {
+    position: relative;
+    /* toute la hauteur du carrousel, plus l'espace vide au-dessus (8px)
+       et en dessous (les 40px avant le titre) : les photos peuvent y
+       grandir sans que le titre, le texte ou la flèche ne bougent */
+    height: calc(100% + 48px);
+    margin: -8px 0 -40px;
+    /* overflow: hidden (et pas clip-path / overflow: clip) : certains
+       navigateurs (Safari) aplatissent la perspective 3D avec ces derniers */
+    overflow: hidden;
+    perspective: 170px;
+    perspective-origin: 50% 50%;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.hero-gallery__stage.is-dragging { cursor: grabbing; }
+.hero-gallery.is-zoomed .hero-gallery__stage { cursor: zoom-out; }
+
+.hero-gallery__ring {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    pointer-events: none; /* laisse les clics atteindre les photos */
+}
+
+.hero-gallery__item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--card-w);
+    height: var(--card-h);
+    margin: calc(var(--card-h) / -2) 0 0 calc(var(--card-w) / -2);
+    object-fit: cover;
+    object-position: center 30%;
+    border-radius: 22px;
+    /* --shadow-k (posé par hero-gallery.js) compense le zoom :
+       l'ombre garde la même taille à l'écran */
+    box-shadow: 0 calc(10px * var(--shadow-k, 1)) calc(30px * var(--shadow-k, 1)) rgba(60, 30, 80, 0.25);
+    backface-visibility: hidden;
+    -webkit-user-drag: none;
+    pointer-events: auto;
+    cursor: zoom-in;
+}
+.hero-gallery.is-zoomed .hero-gallery__item { cursor: zoom-out; }
+
+/* Chevrons + compteur : visibles seulement quand on s'est rapproché d'une photo */
+.hero-gallery__nav {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.hero-gallery.is-zoomed .hero-gallery__nav {
+    opacity: 1;
+    transition: opacity 0.35s ease 0.45s; /* apparaît une fois le rapprochement presque fini */
+}
+
+.hero-gallery__btn {
+    /* chevrons discrets, sans fond : posés sous la photo, à côté du compteur,
+       pour ne pas se superposer aux photos */
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    color: var(--color-white);
+    opacity: 0.8;
+    cursor: pointer;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.hero-gallery.is-zoomed .hero-gallery__btn { pointer-events: auto; }
+.hero-gallery__btn:hover  { opacity: 1; background: rgba(255, 255, 255, 0.14); }
+.hero-gallery__btn:active { background: rgba(255, 255, 255, 0.24); }
+.hero-gallery__btn:focus-visible { outline: none; opacity: 1; box-shadow: var(--neu-focus); }
+
+/* ligne « ‹  04 / 17  › » centrée sous la photo zoomée */
+.hero-gallery__controls {
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.hero-gallery__count {
+    min-width: 64px;
+    text-align: center;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.92);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Photo de la section post-natal */
+.service-block__illustration img.service-block__photo {
+    max-height: 420px;
+    width: auto;
+    border-radius: var(--radius-page);
+    box-shadow: var(--shadow-card);
+    cursor: zoom-in;
+}
+
+@media (max-width: 900px) {
+    .hero { padding: 8px 0 56px; }
+    .hero { --nav-h: 75px; --peek: 112px; }
+    .hero .hero__content { padding: 0 20px; }
+    .hero .hero__title { margin-bottom: 14px; }
+    .hero .hero__subtitle { font-size: 0.95rem; margin-bottom: 20px; }
+    .hero-gallery { --card-w: 130px; --card-h: 165px; }
+}
+
+/* sur téléphone, le titre se replie librement, en lignes équilibrées */
+@media (max-width: 600px) {
+    .hero__title-line { display: inline; white-space: normal; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-gallery { animation: none; opacity: 1; }
+}
+
+/* ============================================
+   ZONE CLAIRE — cartes plates
+   Même mise en page que le panneau .rdv-page de la page rendez-vous
+   (contenu centré 1100px, cartes arrondies 28px), mais SANS relief
+   néomorphique (demande de la cliente) : fond un peu plus clair
+   que la page + fin liseré lavande, photos sans ombre.
+   ============================================ */
+.main-content {
+    padding: 56px 60px 80px;
+}
+
+.main-content > .section-about,
+.main-content > .services,
+.main-content > .two-columns {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* ── Cartes ── */
+.section-about,
+.service-block,
+.two-columns__col {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(168, 136, 224, 0.22);
+    border-radius: 28px;
+    box-shadow: none;
+}
+
+/* ── Mon parcours ── */
+.section-about {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 48px;
+    padding: 40px;
+    margin-bottom: 0;
+}
+.section-about__illustration { align-items: center; }
+.section-about__illustration img {
+    border-radius: 20px;
+    box-shadow: none;
+    object-fit: cover;
+}
+.section-about__text h2 { margin-bottom: 20px; }
+
+/* ── Prestations ── */
+.services {
+    padding: 0;
+    position: relative;
+}
+
+.service-block {
+    padding: 40px;
+    margin-bottom: 0;
+}
+
+.service-block--single .service-block__text {
+    max-width: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
+}
+.service-block--single .service-block__text > h3 {
+    grid-column: 1 / -1;
+    margin-bottom: 24px;
+}
+/* séparateur fin comme les lignes de tarifs de la page rdv */
+.service-sub + .service-sub {
+    border-left: 1px solid rgba(168, 136, 224, 0.25);
+    padding-left: 48px;
+}
+.service-sub p:last-child { margin-bottom: 0; }
+
+
+.service-block--reverse {
+    margin-top: 0;
+    gap: 48px;
+}
+.service-block--reverse .service-block__text p:last-child { margin-bottom: 0; }
+.service-block__illustration img.service-block__photo {
+    max-height: 440px;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+/* ── Prestations : carte seule (préconceptionnel + photo),
+      puis prénatal et post-natal ensemble dans une même carte ── */
+.service-block--intro {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 48px;
+}
+.service-block--intro .service-block__text > h3 { margin-bottom: 24px; }
+.service-block--intro .service-block__text p:last-child { margin-bottom: 0; }
+.service-block--intro .service-block__illustration img.service-block__photo { max-width: 340px; }
+
+.service-block--pair {
+    grid-template-columns: 1fr 1fr;
+    gap: 0 48px;
+    align-items: start;
+}
+.service-block--pair h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.6vw, 1.6rem);
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: 16px;
+}
+.service-block--pair p {
+    font-size: 0.875rem;
+    line-height: 1.85;
+    color: var(--color-text-light);
+    margin-bottom: 16px;
+}
+.service-block--pair .service-sub + .service-sub { align-self: stretch; }
+
+/* ── Psychophonie / LineQuartz / MILTA ──
+   Psychophonie et MILTA côte à côte, LineQuartz en pleine largeur
+   dessous avec ses photos (elles ne concernent que LineQuartz). */
+.two-columns {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "psy   milta"
+        "arrow arrow"
+        "lq    lq";
+    column-gap: 32px;
+    row-gap: 0;
+    padding: 0;
+}
+.two-columns__col { padding: 28px 32px; }
+.two-columns__col:nth-child(1) { grid-area: psy; }
+.two-columns__col:last-child  { grid-area: milta; }
+.two-columns__col--linequartz  { grid-area: lq; }
+.two-columns__col p:last-child { margin-bottom: 0; }
+
+.linequartz-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 12px;
+}
+
+/* ── Photos de la zone claire : format carré (1:1) ── */
+.section-about__illustration img,
+.service-block__illustration img.service-block__photo,
+.linequartz-gallery img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: none;
+}
+.section-about__illustration img {
+    width: 100%;
+    max-width: 400px;
+    max-height: none !important; /* annule le style en ligne */
+}
+.service-block__illustration img.service-block__photo {
+    width: 100%;
+    max-width: 400px;
+    max-height: none;
+}
+.linequartz-gallery img { width: 100%; }
+
+@media (max-width: 1100px) {
+    .main-content { padding: 48px 32px 64px; }
+}
+
+@media (max-width: 900px) {
+    .main-content { padding: 36px 16px 40px; }
+    .section-about,
+    .service-block { padding: 24px 20px; }
+    .section-about { grid-template-columns: 1fr; gap: 28px; }
+    .service-block--single .service-block__text { grid-template-columns: 1fr; }
+    .service-block--intro,
+    .service-block--pair { grid-template-columns: 1fr; gap: 24px; }
+    .service-block--pair { gap: 0; }
+    .service-sub + .service-sub {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid rgba(168, 136, 224, 0.25);
+        padding-top: 20px;
+        margin-top: 4px;
+    }
+    .two-columns {
+        grid-template-columns: 1fr;
+        grid-template-areas: "psy" "arrow2" "milta" "arrow" "lq";
+        row-gap: 0;
+        padding: 0;
+    }
+    .two-columns__col { padding: 24px 20px; }
+    .linequartz-gallery { gap: 10px; }
+    .linequartz-gallery img { border-radius: 14px; }
+}
+
+/* ── Flèches entre les blocs ──
+   Une flèche en pointillés (dessinée en SVG) relie chaque carte à la
+   suivante et guide la lecture vers le bas ; formes alternées
+   (courbe / boucle, miroir) pour garder un côté fait main. */
+.flow-arrow {
+    display: flex;
+    justify-content: center;
+    padding: 18px 0;
+    pointer-events: none;
+}
+.flow-arrow img,
+.flow-arrow svg {
+    width: 66px;
+    height: 88px;
+    opacity: 0.8;
+}
+.flow-arrow--mirror img,
+.flow-arrow--mirror svg { transform: scaleX(-1); }
+
+/* tracé animé (SVG injecté par main.js) : le trait se dessine
+   du haut vers la pointe, puis le chevron apparaît */
+.flow-arrow__reveal {
+    /* tiret de 1 (= tout le chemin) suivi d'un vide ; départ un peu
+       au-delà de 1 pour que l'extrémité arrondie ne laisse pas de point */
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1.06;
+    transition: stroke-dashoffset 1.3s cubic-bezier(0.45, 0, 0.25, 1);
+}
+.flow-arrow__head {
+    opacity: 0;
+    transition: opacity 0.25s ease 1.15s;
+}
+/* flèche du haut : laisse d'abord le bandeau violet apparaître */
+.flow-arrow--onload .flow-arrow__reveal { transition-delay: 0.6s; }
+.flow-arrow--onload .flow-arrow__head   { transition-delay: 1.75s; }
+.flow-arrow.is-drawn .flow-arrow__reveal { stroke-dashoffset: 0; }
+.flow-arrow.is-drawn .flow-arrow__head   { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+    .flow-arrow__reveal,
+    .flow-arrow__head { transition: none; }
+}
+.flow-arrow--grid { grid-area: arrow; }
+/* psychophonie et MILTA sont côte à côte sur ordinateur :
+   cette flèche n'apparaît que lorsqu'elles s'empilent (mobile) */
+.flow-arrow--mobile { display: none; grid-area: arrow2; }
+.main-content > .flow-arrow:first-child { padding-top: 0; }
+
+@media (max-width: 900px) {
+    .flow-arrow { padding: 12px 0; }
+    .flow-arrow--mobile { display: flex; }
+    .flow-arrow img,
+    .flow-arrow svg { width: 54px; height: 72px; }
 }

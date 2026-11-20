@@ -28,15 +28,91 @@
 
     --radius-page: 36px;
 
+    /* Ombre des panneaux clairs posés sur le violet (pages superposées) */
+    --shadow-page-color: rgba(84, 76, 99, 0.26);
+    --shadow-page-size: 22px;
+    --shadow-page: 0 -8px 22px rgba(84, 76, 99, 0.28), 0 14px 30px rgba(30, 22, 44, 0.35); /* haut : sur le violet ; bas : sur le pied de page */
+
     --shadow-soft: 0 4px 24px rgba(60, 30, 30, 0.10);
     --shadow-card: 0 8px 40px rgba(60, 30, 30, 0.13);
 
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* ── Néomorphisme (soft UI) ──
+       Relief : lumière en haut à gauche, ombre en bas à droite,
+       + un léger biseau intérieur. Enfoncé : ombres inversées vers l'intérieur.
+       Les deux états ont 4 ombres dans le même ordre (2 externes, 2 internes)
+       pour que la transition soit fluide. */
+    --neu-ink: 84, 76, 99;          /* = --color-dark en RGB */
+    --neu-tint: 110, 70, 190;       /* violet profond pour la teinte des ombres */
+
+    /* Boutons posés sur le fond violet (navbar, hero) :
+       même couleur que le fond, relief obtenu avec un violet clair
+       (lumière) et un violet profond (ombre). */
+    --neu-surface: #EDE8F7;               /* = --color-bg-light, le gris lavande de la page */
+    --neu-surface-pressed: #E4DEF1;       /* un cran plus foncé quand le bouton est enfoncé */
+    --neu-light:   210, 190, 250;         /* violet clair  (lumière autour du bouton) */
+    --neu-dark:     88,  58, 150;         /* violet profond (ombre autour du bouton) */
+    --neu-raised:
+                  -7px -7px 16px rgba(var(--neu-light), 0.90),
+                   8px  8px 18px rgba(var(--neu-dark), 0.65),
+            inset  2px  2px  2px rgba(255, 255, 255, 0.90),
+            inset -2px -2px  4px rgba(var(--neu-dark), 0.18);
+    --neu-pressed:
+                   0    0    0   rgba(var(--neu-light), 0),
+                   0    0    0   rgba(var(--neu-dark), 0),
+            inset  6px  6px 12px rgba(var(--neu-dark), 0.30),
+            inset -5px -5px 10px rgba(255, 255, 255, 0.95);
+    --neu-pressed-deep:
+                   0    0    0   rgba(var(--neu-light), 0),
+                   0    0    0   rgba(var(--neu-dark), 0),
+            inset  8px  8px 16px rgba(var(--neu-dark), 0.38),
+            inset -6px -6px 12px rgba(255, 255, 255, 0.95);
+
+    --neu-accent-surface: #A888E0;
+    --neu-accent-raised:
+                  -5px -5px 12px rgba(255, 255, 255, 0.70),
+                   5px  5px 14px rgba(var(--neu-tint), 0.35),
+            inset  2px  2px  2px rgba(255, 255, 255, 0.35),
+            inset -2px -2px  4px rgba(60, 25, 120, 0.25);
+    --neu-accent-pressed:
+                   0    0    0   rgba(255, 255, 255, 0),
+                   0    0    0   rgba(var(--neu-tint), 0),
+            inset  5px  5px 10px rgba(60, 25, 120, 0.40),
+            inset -4px -4px  8px rgba(255, 255, 255, 0.25);
+
+    --neu-focus: 0 0 0 3px #FFFFFF, 0 0 0 5px #6A4AA8;
+
+    /* Éléments posés sur le fond CLAIR (cartes, jours du calendrier,
+       champs de formulaire) : lumière blanche en haut à gauche,
+       ombre lavande en bas à droite. */
+    --neu-soft-raised:
+                  -10px -10px 24px rgba(255, 255, 255, 0.90),
+                   10px  10px 26px rgba(var(--neu-dark), 0.16);
+    --neu-soft-raised-sm:
+                   -4px  -4px  8px rgba(255, 255, 255, 0.95),
+                    4px   4px 10px rgba(var(--neu-dark), 0.20),
+            inset   0     0    0   rgba(var(--neu-dark), 0),
+            inset   0     0    0   rgba(255, 255, 255, 0);
+    --neu-soft-pressed:
+                    0     0    0   rgba(255, 255, 255, 0),
+                    0     0    0   rgba(var(--neu-dark), 0),
+            inset   3px   3px  6px rgba(var(--neu-dark), 0.20),
+            inset  -3px  -3px  6px rgba(255, 255, 255, 0.95);
+    --neu-soft-inset:
+            inset   3px   3px  7px rgba(var(--neu-dark), 0.16),
+            inset  -3px  -3px  7px rgba(255, 255, 255, 0.95);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
+
+/* Barre de défilement masquée sur tout le site (le défilement
+   à la molette, au trackpad, au clavier et au doigt fonctionne toujours) */
+html { scrollbar-width: none; }              /* Firefox */
+html::-webkit-scrollbar { display: none; }   /* Safari, Chrome, Edge */
 
 body {
     font-family: var(--font-body);
@@ -63,6 +139,52 @@ a   { text-decoration: none; color: inherit; }
     z-index: 100;
 }
 
+/* Coins arrondis fixes sous la navbar (ou sous la barre collante
+   .sticky-bar quand la page en a une) : quand le panneau clair passe
+   dessous (classe .navbar--overlap posée par main.js), ils masquent
+   le contenu qui défile et dessinent l'ombre du panneau sur le violet,
+   pour que les pages gardent l'air superposées pendant le scroll. */
+.navbar--overlap,
+.sticky-bar.navbar--overlap {
+    /* ombre droite au-dessus du bord du panneau, entre les deux coins */
+    background:
+        linear-gradient(to top, var(--shadow-page-color), transparent)
+            center bottom / calc(100% - 2 * var(--radius-page)) var(--shadow-page-size) no-repeat,
+        var(--color-bg-hero);
+}
+.navbar--overlap::before,
+.navbar--overlap::after {
+    content: '';
+    position: absolute;
+    top: calc(100% - var(--shadow-page-size));
+    width: var(--radius-page);
+    height: calc(var(--radius-page) + var(--shadow-page-size));
+    pointer-events: none;
+    z-index: -1; /* sous les boutons de la navbar, pour ne pas masquer leur ombre */
+}
+.navbar--overlap::before {
+    left: 0;
+    background:
+        radial-gradient(circle at 100% 100%,
+            transparent calc(var(--radius-page) - 0.5px),
+            var(--shadow-page-color) var(--radius-page),
+            transparent calc(var(--radius-page) + var(--shadow-page-size))),
+        radial-gradient(circle at 100% 100%,
+            transparent calc(var(--radius-page) - 0.5px),
+            var(--color-bg-hero) var(--radius-page));
+}
+.navbar--overlap::after {
+    right: 0;
+    background:
+        radial-gradient(circle at 0 100%,
+            transparent calc(var(--radius-page) - 0.5px),
+            var(--shadow-page-color) var(--radius-page),
+            transparent calc(var(--radius-page) + var(--shadow-page-size))),
+        radial-gradient(circle at 0 100%,
+            transparent calc(var(--radius-page) - 0.5px),
+            var(--color-bg-hero) var(--radius-page));
+}
+
 .nav-brand {
     display: flex;
     align-items: center;
@@ -76,63 +198,206 @@ a   { text-decoration: none; color: inherit; }
     transition: opacity var(--transition);
 }
 .nav-brand:hover { opacity: 0.8; }
-.nav-cta {
+.btn.nav-cta { /* .btn.nav-cta : doit l’emporter sur la transition de .btn */
+    /* masqué tant que le bouton du hero est visible ; apparaît en douceur
+       (fondu + léger zoom + flou qui se dissipe), après la disparition
+       du bouton du hero */
+    white-space: nowrap;
     opacity: 0;
-    transform: translateY(-8px) scale(0.95);
+    transform: scale(0.85);
+    filter: blur(6px);
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        filter 0.25s ease,
+        box-shadow 0.25s ease;
 }
-.nav-cta.visible {
+.btn.nav-cta.visible {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1);
+    filter: blur(0);
     pointer-events: auto;
+    transition:
+        opacity 0.4s ease 0.15s,
+        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s,
+        filter 0.4s ease 0.15s,
+        box-shadow 0.25s ease;
 }
+.nav-cta__short { display: none; }
+@media (max-width: 600px) {
+    .nav-cta__full  { display: none; }
+    .nav-cta__short { display: inline; }
+}
+
 .nav-brand__logo {
     height: 32px;
     width: auto;
     display: block;
 }
 
+/* Colibri : quand il se repose dans la navbar après son envol
+   (assets/js/colibri.js), le nom s'illumine brièvement. */
+.nav-brand--glow {
+    animation: navBrandGlow 1.4s ease-out;
+}
+@keyframes navBrandGlow {
+    0%   { text-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+    22%  { text-shadow: 0 0 14px rgba(255, 255, 255, 0.85), 0 0 3px rgba(255, 255, 255, 0.9); }
+    100% { text-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+}
+
 /* ============================================
-   BOUTONS — Néomorphisme inset (effet bombé)
+   BOUTONS — Néomorphisme : en relief au repos,
+   enfoncés au survol (pas de soulèvement).
    ============================================ */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 13px 30px;
-    border-radius: 50px;
+    border-radius: 999px;
     font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 400;
     letter-spacing: 0.01em;
     cursor: pointer;
     border: none;
-    background: #EDE8F7;
-    color: #2C2424;
-    transition: box-shadow var(--transition), transform var(--transition);
-
-    box-shadow:
-            inset  8px   8px 18px rgba(255, 255, 255, 0.20),
-            inset -8px  -8px 18px rgba(170,  80,  75, 0.40);
+    background: var(--neu-surface);
+    color: var(--color-dark);
+    box-shadow: var(--neu-raised);
+    transition: box-shadow 0.25s ease, color 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn:hover {
-    box-shadow:
-            inset  10px  10px 22px rgba(255, 255, 255, 0.30),
-            inset -10px -10px 22px rgba(170,  80,  75, 0.50);
-    transform: translateY(-1px);
+    background: var(--neu-surface-pressed);
+    box-shadow: var(--neu-pressed);
 }
 
 .btn:active {
-    box-shadow:
-            inset  8px   8px 18px rgba(170,  80,  75, 0.30),
-            inset -8px  -8px 18px rgba(255, 255, 255, 0.75);
-    transform: translateY(0);
+    background: var(--neu-surface-pressed);
+    box-shadow: var(--neu-pressed-deep);
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: var(--neu-raised), var(--neu-focus);
 }
 
 .btn-outline { /* hérite de .btn */ }
 .btn-primary { /* hérite de .btn */ }
+
+/* ============================================
+   PAGES INTÉRIEURES (rendez-vous, contact)
+   Même haut que l'accueil : bandeau violet (.page-hero)
+   puis panneau clair superposé (.page-panel) contenant
+   des cartes néomorphiques (.neu-card).
+   ============================================ */
+.page-hero {
+    background: var(--color-bg-hero);
+    padding: 40px 60px 90px;
+}
+
+.page-hero__content {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.page-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 600;
+    color: var(--color-white);
+    line-height: 1.3;
+    margin-bottom: 14px;
+    opacity: 0;
+    animation: pageFadeUp 0.7s ease forwards 0.15s;
+}
+
+.page-hero__subtitle {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: pageFadeUp 0.7s ease forwards 0.3s;
+}
+
+/* Barre collante sous la navbar (tuto de la page rendez-vous) :
+   reste visible pendant le scroll. --navbar-h est mesurée par main.js. */
+.page-hero--with-bar { padding-bottom: 0; }
+.page-hero--with-bar .page-hero__subtitle { margin-bottom: 4px; }
+
+.sticky-bar {
+    position: sticky;
+    top: var(--navbar-h, 85px);
+    z-index: 90;               /* au-dessus du panneau clair, sous la navbar */
+    background: var(--color-bg-hero);
+    /* assez de marge pour que l'ombre en relief des pastilles
+       (--neu-raised : 23 px en haut, 26 px en bas) ne soit pas coupée
+       par la navbar au-dessus ni par le bord de la barre */
+    padding: 24px 60px 26px;
+}
+
+/* violet restant sous la barre, que le panneau clair vient recouvrir */
+.sticky-bar__spacer {
+    height: 64px;
+    background: var(--color-bg-hero);
+}
+
+@keyframes pageFadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Le panneau prend la hauteur de son contenu ; s'il est plus court que
+   l'écran il s'étire jusqu'en bas, pour que le violet n'apparaisse
+   jamais sous la page. */
+body:has(.page-panel) {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-panel {
+    flex: 1;
+    background: var(--color-bg-light);
+    border-radius: var(--radius-page); /* arrondi en bas aussi : il se pose sur le pied de page */
+    margin-top: -30px;
+    padding: 56px 60px;
+    position: relative;
+    box-shadow: var(--shadow-page);
+    z-index: 1;
+}
+
+.neu-card {
+    background: var(--neu-surface);
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: var(--neu-soft-raised);
+}
+
+.neu-card__title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+    .page-hero { padding: 28px 20px 70px; }
+    .page-hero--with-bar { padding-bottom: 0; }
+    .sticky-bar { padding: 22px 20px 24px; }
+    .sticky-bar__spacer { height: 46px; }
+}
+
+@media (max-width: 768px) {
+    .page-panel { padding: 36px 16px 40px; }
+    .neu-card { padding: 22px 18px; }
+}
 
 /* ============================================
    RESPONSIVE
@@ -144,80 +409,276 @@ a   { text-decoration: none; color: inherit; }
 }
 
 /* ============================================
-   LIGHTBOX — Agrandissement d'image au clic
+   LIGHTBOX — Visionneuse plein écran (même esprit que le zoom du carrousel)
+   L'image grandit depuis sa place dans la page, sur le violet du site ;
+   les images voisines restent visibles sur les côtés, inclinées et
+   transparentes ; « ‹ 02 / 05 › » sous l'image.
    ============================================ */
 .lightbox-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(30, 20, 40, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 32px;
     z-index: 9999;
-    opacity: 0;
+    overflow: hidden; /* les images des côtés ne doivent pas élargir la page */
+    perspective: 1400px;
     pointer-events: none;
-    transition: opacity var(--transition);
+    visibility: hidden;
 }
-.lightbox-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
+.lightbox-overlay.active,
+.lightbox-overlay.closing {
+    visibility: visible;
 }
-.lightbox-overlay img {
-    max-width: 90vw;
-    max-height: 88vh;
+.lightbox-overlay.active { pointer-events: auto; }
+
+.lightbox-overlay__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(168, 136, 224, 0.97); /* violet du site */
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    cursor: zoom-out;
+}
+.lightbox-overlay.active .lightbox-overlay__backdrop { opacity: 1; }
+
+.lightbox-overlay__track {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
+
+.lightbox-overlay__img {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    max-width: min(78vw, 1100px);
+    max-height: 74vh;
     width: auto;
     height: auto;
-    border-radius: var(--radius-page);
-    box-shadow: var(--shadow-card);
-}
-.lightbox-overlay__close {
-    position: absolute;
-    top: 24px;
-    right: 32px;
-    color: var(--color-white);
-    font-size: 2rem;
-    line-height: 1;
+    border-radius: 22px;
+    /* rognage animé : à l'ouverture / la fermeture, l'image prend le cadrage
+       et les coins de sa vignette (calculés par main.js) */
+    clip-path: inset(0px 0px 0px 0px round 22px);
+    box-shadow: 0 10px 30px rgba(60, 30, 80, 0.25);
+    transform-origin: 50% 50%;
+    transition:
+        transform 0.65s cubic-bezier(0.65, 0, 0.35, 1),
+        clip-path 0.65s cubic-bezier(0.65, 0, 0.35, 1),
+        opacity 0.65s cubic-bezier(0.65, 0, 0.35, 1),
+        box-shadow 0.65s ease;
+    pointer-events: auto;
     cursor: pointer;
-    background: none;
-    border: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    will-change: transform, opacity;
 }
-.lightbox-overlay__nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--color-white);
-    padding: 0;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.25);
+.lightbox-overlay__img.is-center { cursor: zoom-out; }
+.lightbox-overlay__img.no-transition { transition: none; }
+
+.lightbox-overlay__close,
+.lightbox-overlay__btn {
+    width: 40px;
+    height: 40px;
     border: none;
     border-radius: 50%;
-    width: 56px;
-    height: 56px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    color: var(--color-white);
+    opacity: 0.8;
+    cursor: pointer;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.lightbox-overlay__close:hover,
+.lightbox-overlay__btn:hover  { opacity: 1; background: rgba(255, 255, 255, 0.14); }
+.lightbox-overlay__close:active,
+.lightbox-overlay__btn:active { background: rgba(255, 255, 255, 0.24); }
+.lightbox-overlay__close:focus-visible,
+.lightbox-overlay__btn:focus-visible { outline: none; opacity: 1; box-shadow: var(--neu-focus); }
+
+.lightbox-overlay__close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.lightbox-overlay__controls {
+    position: absolute;
+    left: 50%;
+    bottom: 3vh;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: background var(--transition);
+    gap: 14px;
 }
-.lightbox-overlay__nav svg {
-    display: block;
+.lightbox-overlay__count {
+    min-width: 64px;
+    text-align: center;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.92);
+    font-variant-numeric: tabular-nums;
 }
-.lightbox-overlay__nav--prev svg { margin-right: 2px; }
-.lightbox-overlay__nav--next svg { margin-left: 2px; }
-.lightbox-overlay__nav:hover {
-    background: rgba(0, 0, 0, 0.45);
+
+/* boutons : apparaissent une fois l'image ouverte */
+.lightbox-overlay__close,
+.lightbox-overlay__controls {
+    opacity: 0;
+    transition: opacity 0.25s ease;
 }
-.lightbox-overlay__nav--prev { left: 16px; }
-.lightbox-overlay__nav--next { right: 16px; }
+.lightbox-overlay.active .lightbox-overlay__close { opacity: 0.8; transition: opacity 0.35s ease 0.4s, background 0.2s ease; }
+.lightbox-overlay.active .lightbox-overlay__controls { opacity: 1; transition: opacity 0.35s ease 0.4s; }
+.lightbox-overlay.active .lightbox-overlay__close:hover { opacity: 1; }
+
 @media (max-width: 600px) {
-    .lightbox-overlay__nav {
-        width: 44px;
-        height: 44px;
+    .lightbox-overlay__img {
+        max-width: 86vw;
+        max-height: 70vh;
+        border-radius: 18px;
+        clip-path: inset(0px 0px 0px 0px round 18px);
     }
-    .lightbox-overlay__nav svg {
-        width: 18px;
-        height: 18px;
-    }
-    .lightbox-overlay__nav--prev { left: 8px; }
-    .lightbox-overlay__nav--next { right: 8px; }
+    .lightbox-overlay__close { top: 12px; right: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lightbox-overlay__img,
+    .lightbox-overlay__backdrop { transition: none; }
+}
+}
+
+/* ============================================
+   PIED DE PAGE — commun à toutes les pages
+   Le panneau clair s'arrondit en bas et se pose sur le pied de page,
+   qui glisse dessous (même jeu de superposition qu'avec le hero).
+   Le pied de page n'a pas de bord inférieur : quand on force le scroll
+   en bas, le rebond garde sa couleur (classe html.is-at-bottom posée
+   par main.js), pour qu'il donne l'impression de continuer au-delà
+   de la page.
+   Volontairement à plat : pas de néomorphisme ici.
+   ============================================ */
+html { background: var(--color-bg-hero); }
+html.is-at-bottom { background: var(--color-footer); }
+/* Calque fixe couleur pied de page derrière la moitié basse de l'écran :
+   certains navigateurs (Safari) ne repeignent pas le fond du document
+   pendant le rebond ; ce calque, lui, reste sous la zone révélée. */
+html.is-at-bottom body::after {
+    content: '';
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 50vh;
+    height: 200vh;
+    background: var(--color-footer);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.site-footer {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    margin-top: calc(-1 * var(--radius-page));
+    padding: calc(var(--radius-page) + 64px) 60px 56px;
+    background: var(--color-footer);
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.site-footer__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 48px 56px;
+}
+
+.site-footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-white);
+    margin-bottom: 16px;
+}
+.site-footer__logo img { height: 30px; width: auto; }
+
+.site-footer__brand p {
+    font-size: 0.88rem;
+    line-height: 1.75;
+    max-width: 380px;
+    margin-bottom: 22px;
+}
+
+.site-footer__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: var(--color-white);
+    font-size: 0.85rem;
+    transition: background-color var(--transition), border-color var(--transition);
+}
+.site-footer__cta:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+.site-footer__cta span { transition: transform var(--transition); }
+.site-footer__cta:hover span { transform: translateX(3px); }
+
+.site-footer__heading {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 16px;
+}
+
+.site-footer__col ul { list-style: none; }
+.site-footer__col li {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    overflow-wrap: anywhere;
+}
+.site-footer__col a {
+    background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
+    transition: color var(--transition), background-size var(--transition);
+}
+.site-footer__col a:hover {
+    color: var(--color-white);
+    background-size: 100% 1px;
+}
+
+.site-footer a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.site-footer__bottom {
+    grid-column: 1 / -1;
+    padding-top: 8px;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.5);
+}
+.site-footer__bottom p + p { margin-top: 6px; }
+
+
+@media (max-width: 900px) {
+    .site-footer { padding: calc(var(--radius-page) + 44px) 20px 40px; }
+    .site-footer__inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
+    .site-footer__brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 520px) {
+    .site-footer__inner { grid-template-columns: 1fr; }
 }

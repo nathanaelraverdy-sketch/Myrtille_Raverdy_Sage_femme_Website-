@@ -1,9 +1,10 @@
 .mentions-page {
     background: var(--color-bg-light);
-    border-radius: var(--radius-page) var(--radius-page) 0 0;
+    border-radius: var(--radius-page);
     min-height: 100vh;
     padding: 48px 60px 80px;
     position: relative;
+    box-shadow: var(--shadow-page);
     z-index: 1;
 }
 

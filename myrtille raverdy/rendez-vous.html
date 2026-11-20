@@ -4,30 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rendez-vous — Myrtille Raverdy</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/css/rdv.css" />
+  <link rel="stylesheet" href="assets/css/style.css?v=7" />
+  <link rel="stylesheet" href="assets/css/rdv.css?v=7" />
   <link rel="icon" type="image/png" href="assets/images/logo-colibri-dark.png" />
 </head>
 <body>
 
 <nav class="navbar">
   <a href="index.html" class="nav-brand"><img src="assets/images/logo-colibri-white.png" alt="" class="nav-brand__logo" />Myrtille Raverdy</a>
-  <a href="contact.html" class="btn btn-outline">Contact</a>
   <a href="index.html" class="btn btn-outline">Accueil</a>
+  <a href="contact.html" class="btn btn-outline">Contact</a>
 </nav>
 
-<div class="rdv-page">
+<header class="page-hero page-hero--with-bar">
+  <div class="page-hero__content">
+    <h1 class="page-hero__title">Prendre rendez-vous</h1>
+    <p class="page-hero__subtitle">
+      Un accompagnement personnalisé, doux et respectueux de votre rythme. Réservez votre consultation en quelques instants.
+    </p>
+  </div>
+</header>
+
+<!-- Tuto : barre collante sous la navbar (position: sticky, voir style.css) -->
+<div class="sticky-bar">
+  <div class="page-hero__content">
+      <ol class="rdv-steps" id="rdv-steps" aria-label="Étapes de la réservation">
+        <li class="rdv-steps__item is-active" aria-current="step">
+          <span class="rdv-steps__num">1</span>
+          <span class="rdv-steps__text"><strong>Une date</strong><small>Choisissez le jour qui vous convient</small></span>
+        </li>
+        <li class="rdv-steps__item">
+          <span class="rdv-steps__num">2</span>
+          <span class="rdv-steps__text"><strong>Un créneau</strong><small>Sélectionnez l'heure du rendez-vous</small></span>
+        </li>
+        <li class="rdv-steps__item">
+          <span class="rdv-steps__num">3</span>
+          <span class="rdv-steps__text"><strong>Vos coordonnées</strong><small>Remplissez le formulaire et confirmez</small></span>
+        </li>
+      </ol>
+  </div>
+</div>
+<div class="sticky-bar__spacer" aria-hidden="true"></div>
+
+<div class="page-panel rdv-page">
   <div class="rdv-layout">
 
     <div class="rdv-left">
-      <h1>Rendez-vous</h1>
-      <p>Un accompagnement personnalisé, doux et respectueux de votre rythme.</p>
-      <p>Veuillez sélectionner la date à laquelle vous souhaitez réserver une consultation.</p>
+      <div class="neu-card rdv-calendar">
+      <h2 class="neu-card__title">Choisissez une date</h2>
 
       <div class="calendar-nav">
-        <button class="calendar-nav__btn" id="prev-month">&#9664;</button>
+        <button class="calendar-nav__btn" id="prev-month" aria-label="Mois précédent">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
         <span class="calendar-nav__month" id="calendar-month-label"></span>
-        <button class="calendar-nav__btn" id="next-month">&#9654;</button>
+        <button class="calendar-nav__btn" id="next-month" aria-label="Mois suivant">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
 
       <div class="calendar-headers">
@@ -41,8 +74,9 @@
       </div>
 
       <div class="calendar-grid" id="calendar-grid"></div>
+      </div>
 
-      <div class="rdv-tarifs">
+      <div class="neu-card rdv-tarifs">
         <h3>Tarifs</h3>
         <div class="rdv-tarif__ligne">
           <span>Consultation standard (1h)</span>
@@ -58,7 +92,7 @@
       </div>
     </div>
 
-    <div class="rdv-panel" id="rdv-panel">
+    <div class="neu-card rdv-panel" id="rdv-panel">
 
       <h2 class="rdv-panel__title" id="panel-date">Disponibilité pour le …</h2>
 
@@ -167,7 +201,7 @@
           <input type="checkbox" id="accept-mentions" />
           <span>
             J'accepte la
-            <a href="mentions-legales.html" target="_blank" style="color:var(--color-primary);text-decoration:underline;">
+            <a href="mentions-legales.html" target="_blank">
               politique de confidentialité
             </a>
             et le traitement de mes données personnelles dans le cadre de ce rendez-vous.
@@ -181,15 +215,56 @@
 
       </div>
     </div>
+
+    <div class="rdv-placeholder" aria-hidden="true">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
+      <p>Sélectionnez une date dans le calendrier pour voir les créneaux disponibles.</p>
+    </div>
   </div>
 
-  <div class="rdv-confirmation" id="rdv-confirmation">
+  <div class="neu-card rdv-confirmation" id="rdv-confirmation">
     <p id="confirmation-text"></p>
   </div>
 </div>
 
-<script src="assets/js/main.js"></script>
-<script src="assets/js/calendar.js"></script>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <a href="index.html" class="site-footer__logo"><img src="assets/images/logo-colibri-white.png" alt="" />Myrtille Raverdy</a>
+      <p>Sage-femme indépendante diplômée. Je vous accueille à Lausanne et dans sa région, en cabinet ou à domicile, de la grossesse au post-partum.</p>
+      <a href="rendez-vous.html" class="site-footer__cta">Prendre rendez-vous <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Contact</h2>
+      <ul>
+        <li><a href="tel:+41798952384">(+41) 079 895 23 84</a></li>
+        <li><a href="mailto:myrtille.raverdy@gmail.com">myrtille.raverdy@gmail.com</a></li>
+        <li>Lausanne et région</li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Navigation</h2>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="rendez-vous.html">Rendez-vous</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>Les consultations sont remboursées selon prescription médicale. Les informations présentes sur ce site ont une valeur informative et ne remplacent pas une consultation médicale.</p>
+      <p>© 2025–2026 Myrtille Raverdy · Exercice libéral en Suisse · Site : Nathanael Raverdy · Images : Gstudioimagen</p>
+    </div>
+  </div>
+
+</footer>
+
+<script src="assets/js/main.js?v=7"></script>
+<script src="assets/js/colibri.js?v=7"></script>
+<script src="assets/js/calendar.js?v=7"></script>
 
 </body>
 </html>

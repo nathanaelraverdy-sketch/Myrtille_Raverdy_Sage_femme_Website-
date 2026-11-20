@@ -1,65 +1,216 @@
+/* ============================================
+   CONTACT.CSS — Page « Contact »
+   Bandeau violet (.page-hero), panneau clair (.page-panel)
+   et cartes (.neu-card) : voir style.css.
+   ============================================ */
 
-.contact-page {
-    background: var(--color-bg-light);
-    border-radius: var(--radius-page) var(--radius-page) 0 0;
-    min-height: 100vh;
-    padding: 48px 60px 80px;
-    position: relative;
-    z-index: 1;
+/* ── Accès rapides dans le bandeau : une ligne sur toute la largeur,
+      en relief comme les boutons de la navbar, enfoncés au survol ── */
+.contact-quick {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    opacity: 0;
+    animation: pageFadeUp 0.7s ease forwards 0.45s;
 }
 
+.contact-quick__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    height: 100%;
+    padding: 12px 20px 12px 12px;
+    border-radius: 999px;
+    background: var(--neu-surface);
+    color: var(--color-dark);
+    box-shadow: var(--neu-raised);
+    transition: box-shadow 0.25s ease, background 0.25s ease;
+}
+
+a.contact-quick__item:hover {
+    background: var(--neu-surface-pressed);
+    box-shadow: var(--neu-pressed);
+}
+a.contact-quick__item:active {
+    background: var(--neu-surface-pressed);
+    box-shadow: var(--neu-pressed-deep);
+}
+a.contact-quick__item:focus-visible {
+    outline: none;
+    box-shadow: var(--neu-raised), var(--neu-focus);
+}
+
+.contact-quick__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--neu-accent-surface);
+    color: var(--color-white);
+    box-shadow: var(--neu-accent-raised);
+}
+
+.contact-quick__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.contact-quick__text strong {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+.contact-quick__text small {
+    font-size: 0.78rem;
+    opacity: 0.8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Mise en page : deux colonnes de même hauteur ── */
 .contact-layout {
     display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 80px;
-    align-items: start;
+    grid-template-columns: 400px 1fr;
+    gap: 48px;
+    align-items: stretch;
+    max-width: 1100px;
+    margin: 0 auto;
 }
-.contact-info h1 {
+
+.contact-left {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Carte de présentation */
+.contact-about {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.contact-about__photo {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--neu-surface);
+    box-shadow: var(--neu-soft-raised-sm);
+}
+
+.contact-about__name {
     font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: 1.15rem;
+    font-weight: 600;
     color: var(--color-dark);
-    margin-bottom: 48px;
+    margin-bottom: 4px;
 }
 
-.contact-info__block {
-    margin-bottom: 32px;
-}
-
-.contact-info__block h3 {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: var(--color-dark);
-    margin-bottom: 6px;
-}
-
-.contact-info__block p,
-.contact-info__block a {
-    font-size: 0.9rem;
+.contact-about__role {
+    font-size: 0.875rem;
     color: var(--color-text-light);
-    line-height: 1.6;
-    text-decoration: none;
-    transition: color var(--transition);
+    opacity: 0.75;
 }
 
-.contact-info__block a:hover {
+/* Horaires */
+.contact-horaires__ligne {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(168, 136, 224, 0.25);
+}
+.contact-horaires__ligne span:last-child {
     color: var(--color-primary);
+    white-space: nowrap;
+}
+.contact-horaires__ligne span.contact-horaires__off {
+    color: rgba(var(--neu-ink), 0.45);
+}
+.contact-horaires__ligne:last-child { border-bottom: none; }
+
+/* Zones d'intervention : sur ordinateur, tout le bas de la page
+   (sous les deux colonnes), texte à gauche et carte à droite. */
+.contact-zones-card {
+    grid-column: 1 / -1;
+    scroll-margin-top: 110px;   /* ne pas passer sous la navbar collante */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: stretch;
 }
 
+/* la carte Horaires s'allonge pour rejoindre le bas du formulaire */
+.contact-left > .neu-card:last-child { flex: 1; }
 
-.contact-form-section h2 {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 500;
+.contact-zones__intro {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 14px;
+}
+
+.contact-zones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.zone-tag {
+    font-size: 0.78rem;
     color: var(--color-dark);
-    margin-bottom: 36px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--neu-surface);
+    box-shadow: var(--neu-soft-raised-sm);
+}
+
+.contact-map {
+    min-height: 260px;
+    padding: 6px;
+    border-radius: 20px;
+    box-shadow: var(--neu-soft-inset);
+    display: flex;
+}
+.contact-map iframe {
+    flex: 1;
+    height: auto;
+    min-height: 248px;
+    border: 0;
+    border-radius: 15px;
+    display: block;
+}
+
+/* ── Formulaire ── */
+.contact-form-section {
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+}
+
+.contact-form-section__title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: 20px;
 }
 
 .contact-form {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    transition: opacity 0.3s ease;
 }
 
 .contact-form__group {
@@ -68,174 +219,139 @@
     gap: 6px;
 }
 
+/* le message prend toute la hauteur restante */
+.contact-form__group--message { flex: 1; }
+
 .contact-form__group label {
-    font-size: 0.875rem;
+    font-size: 0.82rem;
     color: var(--color-dark);
-    font-weight: 400;
+    padding-left: 4px;
 }
 
+/* Champs creusés dans la surface */
 .contact-form__group input,
 .contact-form__group textarea {
-    background: transparent;
-    border: 1.5px solid var(--color-primary);
-    border-radius: 50px;
-    padding: 12px 20px;
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    background: var(--neu-surface);
+    box-shadow: var(--neu-soft-inset);
+    padding: 12px 16px;
     font-family: var(--font-body);
     font-size: 0.875rem;
     color: var(--color-dark);
     outline: none;
-    transition: border-color var(--transition);
-    width: 100%;
     resize: none;
+    transition: box-shadow 0.25s ease;
 }
 
 .contact-form__group textarea {
-    border-radius: 20px;
-    height: 220px;
-    padding: 16px 20px;
+    flex: 1;
+    min-height: 200px;
+    line-height: 1.6;
+}
+
+.contact-form__group input::placeholder,
+.contact-form__group textarea::placeholder {
+    color: rgba(var(--neu-ink), 0.4);
 }
 
 .contact-form__group input:focus,
 .contact-form__group textarea:focus {
-    border-color: var(--color-primary-dark);
-}
-
-.contact-form__group input[type="email"]:invalid:not(:placeholder-shown) {
-    border-color: #cc2222;
+    box-shadow: var(--neu-soft-inset), 0 0 0 2px var(--color-primary);
 }
 
 .contact-error {
+    display: none;
     font-size: 0.75rem;
     color: #cc2222;
-    display: none;
     margin-top: 2px;
-    padding-left: 8px;
+    padding-left: 4px;
 }
 .contact-error.visible { display: block; }
 
-
+/* Bouton violet, s'enfonce au survol */
 .btn-envoyer {
     align-self: flex-start;
-    margin-top: 4px;
-    background: var(--color-primary);
+    margin-top: 6px;
+    background: var(--neu-accent-surface);
     color: var(--color-white);
-    border: none;
-    font-size: 0.9rem;
-    padding: 13px 32px;
-    border-radius: 50px;
-    font-family: var(--font-body);
-    cursor: pointer;
-    transition: all var(--transition);
-    box-shadow:
-            inset  5px  5px 10px rgba(255, 255, 255, 0.20),
-            inset -5px -5px 10px rgba(140, 30, 30, 0.35);
+    box-shadow: var(--neu-accent-raised);
 }
 
-.btn-envoyer:hover {
-    transform: translateY(-1px);
-    box-shadow:
-            inset  6px  6px 12px rgba(255, 255, 255, 0.25),
-            inset -6px -6px 12px rgba(140, 30, 30, 0.40);
-}
-
+.btn-envoyer:hover,
 .btn-envoyer:active {
-    transform: translateY(0);
-    box-shadow:
-            inset  8px  8px 16px rgba(140, 30, 30, 0.40),
-            inset -8px -8px 16px rgba(255, 255, 255, 0.15);
+    background: var(--neu-accent-surface);
+    box-shadow: var(--neu-accent-pressed);
 }
 
+.btn-envoyer:focus-visible {
+    outline: none;
+    box-shadow: var(--neu-accent-raised), var(--neu-focus);
+}
 
+.btn-envoyer:disabled { cursor: default; }
+
+/* Confirmation (affichée par contact.js) */
 .contact-confirmation {
     display: none;
-    background: rgba(236, 97, 100, 0.08);
-    border: 1.5px solid var(--color-primary);
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-top: 16px;
+    margin-top: 20px;
+    padding: 18px 22px;
+    border-radius: 18px;
+    box-shadow: var(--neu-soft-inset);
 }
 
 .contact-confirmation p {
     font-size: 0.9rem;
-    color: var(--color-dark);
     line-height: 1.7;
+    color: var(--color-dark);
 }
 
-/*
-============================================
-   RESPONSIVE — Tablette (≤ 900px)
-============================================
-*/
-@media (max-width: 900px) {
-    .contact-page {
-        padding: 48px 40px 60px;
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .contact-layout {
+        grid-template-columns: 340px 1fr;
+        gap: 32px;
     }
+    .contact-quick { gap: 16px; }
+}
 
+@media (max-width: 900px) {
+    /* toujours sur une ligne, en version compacte */
+    .contact-quick { gap: 12px; }
+    /* l'icône reste à côté du titre */
+    .contact-quick__item {
+        gap: 8px;
+        padding: 8px 12px 8px 8px;
+    }
+    .contact-quick__icon { width: 30px; height: 30px; }
+    .contact-quick__icon svg { width: 15px; height: 15px; }
+    .contact-quick__text strong { font-size: 0.8rem; line-height: 1.25; white-space: nowrap; }
+    .contact-quick__text small { font-size: 0.72rem; }
+}
+
+/* Téléphone : les deux boutons l'un sous l'autre (2 lignes),
+   pour afficher le numéro et l'e-mail en entier sur une ligne */
+@media (max-width: 600px) {
+    .contact-quick {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .contact-quick__item { gap: 12px; padding: 10px 18px 10px 10px; }
+    .contact-quick__icon { width: 36px; height: 36px; }
+    .contact-quick__icon svg { width: 17px; height: 17px; }
+    .contact-quick__text strong { font-size: 0.9rem; }
+    .contact-quick__text small { font-size: 0.8rem; }
+}
+
+@media (max-width: 768px) {
     .contact-layout {
         grid-template-columns: 1fr;
-        gap: 48px;
+        gap: 32px;
     }
-}
-
-/* ============================================
-   RESPONSIVE — Mobile (≤ 480px)
-   ============================================ */
-@media (max-width: 480px) {
-    .contact-page {
-        padding: 36px 20px 48px;
+    .contact-form-section { padding: 22px 18px; }
+    .contact-zones-card {
+        grid-template-columns: 1fr;
+        gap: 24px;
     }
-}
-
-/* Photo */
-.contact-photo {
-    margin-bottom: 28px;
-}
-.contact-photo img {
-    width: 100%;
-    max-width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid var(--color-primary);
-}
-
-/* Horaires */
-.contact-horaires {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-.contact-horaires__ligne {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.875rem;
-    color: var(--color-text-light);
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(236, 97, 100, 0.15);
-}
-.contact-horaires__ligne:last-child {
-    border-bottom: none;
-}
-
-/* Zones */
-.contact-zones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 4px;
-}
-.zone-tag {
-    font-size: 0.75rem;
-
-    border: 1px solid var(--color-primary);
-    border-radius: 50px;
-    padding: 4px 12px;
-    background: rgba(236, 97, 100, 0.06);
-}
-
-.contact-map {
-    margin-top: 28px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1.5px solid rgba(236, 97, 100, 0.3);
 }

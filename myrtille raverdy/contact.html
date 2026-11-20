@@ -4,64 +4,113 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Contact — Myrtille Raverdy</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <link rel="stylesheet" href="assets/css/contact.css" />
+    <link rel="stylesheet" href="assets/css/style.css?v=7" />
+    <link rel="stylesheet" href="assets/css/contact.css?v=7" />
   <link rel="icon" type="image/png" href="assets/images/logo-colibri-dark.png" />
 </head>
 <body>
 
 <nav class="navbar">
     <a href="index.html" class="nav-brand"><img src="assets/images/logo-colibri-white.png" alt="" class="nav-brand__logo" />Myrtille Raverdy</a>
-    <a href="rendez-vous.html" class="btn btn-primary">Prendre rendez-vous</a>
     <a href="index.html" class="btn btn-outline">Accueil</a>
+    <a href="rendez-vous.html" class="btn btn-primary">Prendre rendez-vous</a>
 </nav>
 
-<div class="contact-page">
+<header class="page-hero">
+    <div class="page-hero__content">
+        <h1 class="page-hero__title">Contact</h1>
+        <p class="page-hero__subtitle">
+            Une question, un besoin d'information&nbsp;? Écrivez-moi ou appelez-moi, je vous réponds dans les plus brefs délais.
+        </p>
+        <ul class="contact-quick" aria-label="Me joindre">
+            <li>
+                <a class="contact-quick__item" href="tel:+41079895238">
+                    <span class="contact-quick__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>
+                    <span class="contact-quick__text"><strong>Téléphone</strong><small>079 89 52 384</small></span>
+                </a>
+            </li>
+            <li>
+                <a class="contact-quick__item" href="mailto:myrtille.raverdy@gmail.com">
+                    <span class="contact-quick__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M22 7l-10 6L2 7"/></svg></span>
+                    <span class="contact-quick__text"><strong>E-mail</strong><small>myrtille.raverdy<wbr>@gmail.com</small></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<div class="page-panel contact-page">
     <div class="contact-layout">
-        <div class="contact-info">
 
-            <h1>Informations</h1>
+        <div class="contact-left">
 
-            <div class="contact-photo">
-                <img src="assets/images/Myrtille.jpg" alt="Myrtille Raverdy, sage-femme" />
+            <div class="neu-card contact-about">
+                <img src="assets/images/Myrtille.jpg" alt="Myrtille Raverdy, sage-femme" class="contact-about__photo" />
+                <div>
+                    <h2 class="contact-about__name">Myrtille Raverdy</h2>
+                    <p class="contact-about__role">Sage-femme indépendante</p>
+                </div>
             </div>
 
-            <div class="contact-info__block">
-                <h3>Adresse</h3>
-                <p>Cabinet à Lausanne<br>Interventions à domicile</p>
-            </div>
-
-            <div class="contact-info__block">
-                <h3>Téléphone</h3>
-                <a href="tel:+41079895238">079 89 52 384</a>
-            </div>
-
-            <div class="contact-info__block">
-                <h3>E-mail</h3>
-                <a href="mailto:myrtille.raverdy@gmail.com">myrtille.raverdy@gmail.com</a>
-            </div>
-
-            <div class="contact-info__block">
-                <h3>Horaires</h3>
+            <div class="neu-card">
+                <h2 class="neu-card__title">Horaires</h2>
                 <div class="contact-horaires">
                     <div class="contact-horaires__ligne">
-                        <span>Lundi - Mardi- Jeudi - Vendredi</span>
+                        <span>Lundi, mardi, jeudi, vendredi</span>
                         <span>9h30 – 16h00</span>
                     </div>
                     <div class="contact-horaires__ligne">
                         <span>Mercredi</span>
-                        <span>9h30 - 11h30</span>
+                        <span>9h30 – 11h30</span>
                     </div>
                     <div class="contact-horaires__ligne">
-                        <span>Samedi – Dimanche</span>
-                        <span>Non disponnible</span>
+                        <span>Samedi – dimanche</span>
+                        <span class="contact-horaires__off">Non disponible</span>
                     </div>
                 </div>
             </div>
 
-            <div class="contact-info__block">
-                <h3>Zones d'intervention</h3>
-                <p style="margin-bottom:10px;">Lausanne et communes environnantes :</p>
+        </div>
+
+        <div class="neu-card contact-form-section">
+
+            <h2 class="contact-form-section__title">Écrivez-moi</h2>
+
+            <div class="contact-form" id="contact-form">
+
+                <div class="contact-form__group">
+                    <label for="contact-email">Votre e-mail</label>
+                    <input type="email" id="contact-email" placeholder="nom@domaine.com" />
+                    <span class="contact-error" id="contact-email-error">
+                        Veuillez entrer une adresse email valide (ex: nom@domaine.com)
+                    </span>
+                </div>
+
+                <div class="contact-form__group">
+                    <label for="contact-objet">Objet</label>
+                    <input type="text" id="contact-objet" placeholder="" />
+                </div>
+
+                <div class="contact-form__group contact-form__group--message">
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" placeholder=""></textarea>
+                </div>
+
+                <button class="btn btn-envoyer" id="btn-envoyer">Envoyer</button>
+
+            </div>
+
+            <div class="contact-confirmation" id="contact-confirmation">
+                <p id="contact-confirmation-text"></p>
+            </div>
+
+        </div>
+
+
+            <div class="neu-card contact-zones-card" id="zones">
+                <div class="contact-zones-card__text">
+                <h2 class="neu-card__title">Zones d'intervention</h2>
+                <p class="contact-zones__intro">Lausanne et communes environnantes :</p>
                 <div class="contact-zones">
                     <span class="zone-tag">Lausanne</span>
                     <span class="zone-tag">Pully</span>
@@ -76,58 +125,59 @@
                     <span class="zone-tag">Belmont</span>
                     <span class="zone-tag">Saint-Sulpice</span>
                 </div>
-            </div>
-            <div class="contact-map">
-                <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43879.41!2d6.6322734!3d46.5196535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478c29b2d75e7b41%3A0x728cf46b6c5ca5cb!2sLausanne!5e0!3m2!1sfr!2sfr!4v1710000000000!5m2!1sfr!2sfr"
-                        width="100%" height="220"
-                        style="border:0; border-radius:16px;"
-                        allowfullscreen="" loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </div>
-
-        </div>
-
-        <div class="contact-form-section">
-
-            <h2>Contact</h2>
-
-            <div class="contact-form" id="contact-form">
-
-                <div class="contact-form__group">
-                    <label for="contact-email">Votre Email</label>
-                    <input type="email" id="contact-email" placeholder="" />
-                    <span class="contact-error" id="contact-email-error">
-                        Veuillez entrer une adresse email valide (ex: nom@domaine.com)
-                    </span>
                 </div>
-
-                <div class="contact-form__group">
-                    <label for="contact-objet">Objet</label>
-                    <input type="text" id="contact-objet" placeholder="" />
+                <div class="contact-map">
+                    <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43879.41!2d6.6322734!3d46.5196535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478c29b2d75e7b41%3A0x728cf46b6c5ca5cb!2sLausanne!5e0!3m2!1sfr!2sfr!4v1710000000000!5m2!1sfr!2sfr"
+                            width="100%" height="220"
+                            title="Carte de Lausanne"
+                            allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
-
-                <div class="contact-form__group">
-                    <label for="contact-message">Message</label>
-                    <textarea id="contact-message" placeholder=""></textarea>
-                </div>
-
-                <button class="btn-envoyer" id="btn-envoyer">Envoyer</button>
-
             </div>
-
-            <div class="contact-confirmation" id="contact-confirmation">
-                <p id="contact-confirmation-text"></p>
-            </div>
-
-        </div>
-
 
     </div>
 </div>
 
-<script src="assets/js/contact.js"></script>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <a href="index.html" class="site-footer__logo"><img src="assets/images/logo-colibri-white.png" alt="" />Myrtille Raverdy</a>
+      <p>Sage-femme indépendante diplômée. Je vous accueille à Lausanne et dans sa région, en cabinet ou à domicile, de la grossesse au post-partum.</p>
+      <a href="rendez-vous.html" class="site-footer__cta">Prendre rendez-vous <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Contact</h2>
+      <ul>
+        <li><a href="tel:+41798952384">(+41) 079 895 23 84</a></li>
+        <li><a href="mailto:myrtille.raverdy@gmail.com">myrtille.raverdy@gmail.com</a></li>
+        <li>Lausanne et région</li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Navigation</h2>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="rendez-vous.html">Rendez-vous</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>Les consultations sont remboursées selon prescription médicale. Les informations présentes sur ce site ont une valeur informative et ne remplacent pas une consultation médicale.</p>
+      <p>© 2025–2026 Myrtille Raverdy · Exercice libéral en Suisse · Site : Nathanael Raverdy · Images : Gstudioimagen</p>
+    </div>
+  </div>
+
+</footer>
+
+<script src="assets/js/main.js?v=7"></script>
+<script src="assets/js/colibri.js?v=7"></script>
+<script src="assets/js/contact.js?v=7"></script>
 
 </body>
 </html>

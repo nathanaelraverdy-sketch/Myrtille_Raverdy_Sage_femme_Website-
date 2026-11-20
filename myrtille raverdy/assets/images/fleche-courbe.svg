@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 120" width="90" height="120" fill="none" stroke="#544C63" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- flèche en pointillés, simple courbe en S, pointe vers le bas
+       pathLength + pointillés calculés pour que le trait finisse sur un tiret, pile à la pointe ;
+       chevron orienté selon la tangente de fin de courbe -->
+  <path d="M30 5 C 70 26, 70 50, 45 62 C 22 73, 28 94, 44 110" pathLength="125" stroke-dasharray="5 5"/>
+  <path d="M41.5 99.3 L 44 110 L 33.3 107.5"/>
+</svg>

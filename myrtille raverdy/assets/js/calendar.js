@@ -380,10 +380,23 @@ function selectSlot(btn, heureStr) {
         .forEach(el => el.classList.remove('slot-btn--selected'));
     btn.classList.add('slot-btn--selected');
     state.selectedSlot = heureStr;
+    setStep(3);
 }
 
-function showPanel() { document.getElementById('rdv-panel').classList.add('visible'); }
-function hidePanel() { document.getElementById('rdv-panel').classList.remove('visible'); }
+function showPanel() { document.getElementById('rdv-panel').classList.add('visible'); setStep(2); }
+function hidePanel() { document.getElementById('rdv-panel').classList.remove('visible'); setStep(1); }
+
+/* Met à jour le tuto en haut de page : étapes passées cochées,
+   étape en cours en relief. n = 4 → tout est terminé. */
+function setStep(n) {
+    document.querySelectorAll('#rdv-steps .rdv-steps__item').forEach((li, i) => {
+        const step = i + 1;
+        li.classList.toggle('is-done', step < n);
+        li.classList.toggle('is-active', step === n);
+        if (step === n) li.setAttribute('aria-current', 'step');
+        else li.removeAttribute('aria-current');
+    });
+}
 
 function bloquerApresReservation() {
     state.rdvConfirme = true;
@@ -403,6 +416,7 @@ function afficherConfirmation(payload) {
 
     document.querySelector('.rdv-layout').style.display = 'none';
     document.getElementById('rdv-confirmation').classList.add('visible');
+    setStep(4);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
