@@ -492,9 +492,33 @@
     --card-w: clamp(140px, min(14.5vw, 20vh), 250px);
     --card-h: clamp(170px, min(18vw, 25vh), 310px);
     position: relative;
-    opacity: 0;
-    animation: fadeIn 0.9s ease forwards 0.3s;
 }
+
+/* Roue de chargement : visible tant que le carrousel n'est pas prêt
+   (classe .is-ready posée par hero-gallery.js), photos cachées pendant ce temps */
+.hero-gallery__loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    margin: -21px 0 0 -21px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.28);
+    border-top-color: var(--color-white);
+    animation: heroGallerySpin 0.9s linear infinite;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+.hero-gallery.is-ready .hero-gallery__loader {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+@keyframes heroGallerySpin { to { transform: rotate(360deg); } }
+.hero-gallery:not(.is-ready) .hero-gallery__ring,
+.hero-gallery:not(.is-ready) .hero-gallery__item { visibility: hidden !important; } /* l'emporte sur le style posé par le script */
 
 .hero-gallery__stage {
     position: relative;
@@ -621,7 +645,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .hero-gallery { animation: none; opacity: 1; }
+    .hero-gallery__loader { animation-duration: 2s; }
 }
 
 /* ============================================

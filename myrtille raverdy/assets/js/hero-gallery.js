@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const ZOOM_OUT_MS = 700;
     const NAV_MS = 650;
     const SIDE_OPACITY = 0.35;   // opacité des photos voisines en mode zoomé
+    const INTRO_SPREAD = 6;      // écartement des photos au début de l'apparition
 
     let pos = 0;          // position affichée (continue)
     let zoom = 0;         // 0 = vue normale, 1 = zoomé sur la photo
+    let spread = 1;       // > 1 = photos écartées vers les côtés (début de l'apparition), 1 = carrousel en place
     let zoomed = false;   // état visé
     let radius = 1000;
     let depth = 650;
@@ -141,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         items.forEach((item, i) => {
             // décalage par rapport au centre, ramené dans [-count/2, count/2)
             const offset = wrap(i - pos + count / 2, count) - count / 2;
-            const angle = offset * step;
+            const angle = offset * step * spread;
             const z = -radius * Math.cos(angle) + depth;
             const near = perspective - z; // distance à la caméra
             const minNear = perspective * 0.55;
@@ -153,6 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const x = radius * Math.sin(angle);
             // les photos qui passent tout près de la caméra s'effacent
             let opacity = Math.min(1, Math.max(0, (near - minNear) / (perspective * 0.15)));
+            // apparition : les photos arrivent des côtés (elles sortent de la zone
+            // cachée près de la caméra en fondu) ; la photo du centre apparaît en fondu
+            if (spread > 1 && Math.abs(offset) < 0.5) opacity *= Math.max(0, (INTRO_SPREAD - spread) / (INTRO_SPREAD - 1));
             // en mode zoomé, les voisines restent visibles en transparence
             opacity *= 1 - e * (1 - SIDE_OPACITY) * Math.min(1, Math.abs(offset));
             item.style.visibility = opacity > 0.001 ? 'visible' : 'hidden';
@@ -170,10 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const t = Math.min(1, (now - tween.start) / tween.duration);
         // la rotation peut finir avant le zoom (posLead < 1) :
         // la photo vient d'abord au centre, puis on zoome dessus
-        const kPos = easeInOut(Math.min(1, t / tween.posLead));
-        const kZoom = easeInOut(t);
+        const ease = tween.ease || easeInOut;
+        const kPos = ease(Math.min(1, t / tween.posLead));
+        const kZoom = ease(t);
         pos = tween.from.pos + (tween.to.pos - tween.from.pos) * kPos;
         zoom = tween.from.zoom + (tween.to.zoom - tween.from.zoom) * kZoom;
+        spread = tween.from.spread + (tween.to.spread - tween.from.spread) * kZoom;
         render();
         if (t < 1) {
             rafId = requestAnimationFrame(frame);
@@ -184,9 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function animateTo(toPos, toZoom, duration, onDone, posLead = 1) {
+    function animateTo(toPos, toZoom, duration, onDone, posLead = 1, ease = null) {
         if (reduceMotion) duration = 1;
-        tween = { from: { pos, zoom }, to: { pos: toPos, zoom: toZoom }, start: null, duration, onDone, posLead };
+        tween = {
+            from: { pos, zoom, spread },
+            to: { pos: toPos, zoom: toZoom, spread: 1 }, // toute animation finit carrousel déplié
+            start: null, duration, onDone, posLead, ease,
+        };
         if (!rafId) rafId = requestAnimationFrame(frame);
     }
 
@@ -341,7 +352,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }).observe(stage);
     }
 
+    // --- Chargement puis apparition ---
+    // Une roue de chargement tourne tant que les premières photos visibles ne
+    // sont pas chargées (2,5 s au plus) ; ensuite les photos arrivent des deux
+    // côtés, déjà courbées par la perspective, et glissent jusqu'à leur place.
     measure();
+    spread = INTRO_SPREAD;
+    pos = 0;
     render();
-    startAutoplay();
+
+    const firstVisible = items.filter((_, i) => Math.abs(wrap(i + count / 2, count) - count / 2) <= 5);
+    const loaded = Promise.all(firstVisible.map((img) => new Promise((resolve) => {
+        if (img.complete) resolve();
+        else {
+            img.addEventListener('load', resolve, { once: true });
+            img.addEventListener('error', resolve, { once: true });
+        }
+    })));
+    const timeout = new Promise((resolve) => setTimeout(resolve, 2500));
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+    Promise.race([loaded, timeout]).then(() => {
+        measure(); // les tailles peuvent avoir changé pendant le chargement (police…)
+        gallery.classList.add('is-ready'); // la roue s'efface
+        setTimeout(() => {
+            animateTo(0, 0, 1900, startAutoplay, 1, easeOut);
+        }, reduceMotion ? 0 : 250);
+    });
 });
