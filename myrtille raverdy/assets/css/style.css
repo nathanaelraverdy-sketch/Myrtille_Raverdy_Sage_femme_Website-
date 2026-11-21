@@ -682,3 +682,43 @@ html.is-at-bottom body::after {
 @media (max-width: 520px) {
     .site-footer__inner { grid-template-columns: 1fr; }
 }
+
+/* ============================================
+   PLANTES DÉCORATIVES (toutes les pages)
+   Illustrations SVG (assets/images/plantes/) posées en position absolue
+   aux coins des cartes : elles ne changent pas la mise en page.
+   Elles passent DERRIÈRE la carte (z-index: -1) et ne débordent qu'à
+   l'extérieur ou dans la marge intérieure, jamais sous le texte.
+   La brise (balancement de chaque feuille) est animée dans les SVG ;
+   ici, seulement l'apparition : la plante « pousse » depuis sa base.
+   Placement : --h = hauteur de la plante, --in = distance à laquelle sa
+   base (racine) est cachée derrière le bord de la carte. Les coefficients
+   des pages (ex. 0.413) = position de la racine dans le SVG × proportions
+   du dessin : la racine tombe au même endroit quelle que soit la taille.
+   ============================================ */
+.plante {
+    --in: 20px;
+    position: absolute;
+    z-index: -1;
+    height: var(--h);
+    width: auto;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    transform-origin: 50% 100%;
+    animation: plantePousse 1.1s var(--ease-spring) 0.7s both;
+}
+@keyframes plantePousse {
+    from { opacity: 0; scale: 0.6; }
+    to   { opacity: 1; scale: 1; }
+}
+/* les plantes du bord ne créent pas de défilement horizontal */
+.main-content,
+.page-panel { overflow-x: clip; }
+
+@media (max-width: 900px) {
+    .plante { --in: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .plante { animation: none; }
+}

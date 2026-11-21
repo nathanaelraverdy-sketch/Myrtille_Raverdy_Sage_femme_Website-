@@ -648,7 +648,7 @@
 .section-about,
 .service-block,
 .two-columns__col {
-    background: rgba(255, 255, 255, 0.55);
+    background: #F7F5FB; /* opaque (= l'ancien blanc 55 % posé sur le fond lavande) : les plantes derrière ne transparaissent pas */
     border: 1px solid rgba(168, 136, 224, 0.22);
     border-radius: 28px;
     box-shadow: none;
@@ -870,4 +870,80 @@
     .flow-arrow--mobile { display: flex; }
     .flow-arrow img,
     .flow-arrow svg { width: 54px; height: 72px; }
+}
+
+/* ============================================
+   PLANTES DÉCORATIVES
+   Illustrations SVG (assets/images/plantes/) posées en position absolue
+   aux coins des cartes : elles ne changent pas la mise en page.
+   Elles passent DERRIÈRE la carte (z-index: -1) et ne débordent qu'à
+   l'extérieur ou dans la marge intérieure, jamais sous le texte.
+   La brise (balancement de chaque feuille) est animée dans les SVG ;
+   ici, seulement l'apparition (la plante « pousse » quand la carte entre).
+   ============================================ */
+
+.section-about,
+.service-block,
+.two-columns__col { position: relative; }
+
+/* une fois apparues, les cartes perdent leur transform : sans contexte
+   d'empilement, les plantes en z-index -1 peuvent passer derrière elles */
+.main-content .reveal.visible { transform: none; }
+
+/* règles communes des plantes : voir style.css ; ici elles n'apparaissent
+   qu'avec leur carte (classe .visible posée au scroll par main.js) */
+.main-content .plante {
+    animation: none;
+    opacity: 0;
+    scale: 0.6;
+    transition: opacity 0.8s ease 0.5s, scale 1.1s var(--ease-spring) 0.5s;
+}
+.visible .plante,
+.visible > .plante,
+.section-about:has(.visible) > .plante {
+    opacity: 1;
+    scale: 1;
+}
+
+
+/* Mon parcours : bouquet au coin bas-gauche, fougère au coin haut-droit */
+.plante--about     { --h: 210px; left:  calc(var(--h) * -0.413 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.06); rotate: -32deg; }
+.plante--about-top { --h: 170px; right: calc(var(--h) * -0.444 + var(--in)); top: calc(var(--in) - var(--h) * 0.96); rotate: 38deg; }
+/* Suivi préconceptionnel : brin de myrtille qui sort à droite */
+.plante--intro     { --h: 230px; right: calc(var(--h) * -0.23 + var(--in)); bottom: 70px; rotate: 34deg; }
+/* Prénatal / post-natal : herbes hautes au coin bas-gauche */
+.plante--pair      { --h: 170px; left:  calc(var(--h) * -0.591 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.03); rotate: -30deg; }
+/* Psychophonie : petite pousse au coin haut-gauche */
+.plante--psy       { --h: 120px; left:  calc(var(--h) * -0.496 + var(--in)); top: calc(var(--in) - var(--h) * 0.88); rotate: -36deg; }
+/* MILTA : eucalyptus au coin bas-droit */
+.plante--milta     { --h: 220px; right: calc(var(--h) * -0.498 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.03); rotate: 28deg; }
+/* LineQuartz : bouquet (en miroir) au coin bas-droit */
+.plante--lq        { --h: 180px; right: calc(var(--h) * -0.413 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.06); rotate: 30deg; transform: scaleX(-1); }
+
+@media (max-width: 1100px) {
+    /* marges latérales étroites : plantes plus petites */
+    .plante--about     { --h: 160px; }
+    .plante--about-top { --h: 130px; }
+    .plante--intro     { --h: 180px; }
+    .plante--pair      { --h: 130px; }
+    .plante--psy       { --h: 96px; }
+    .plante--milta     { --h: 170px; }
+    .plante--lq        { --h: 140px; }
+}
+
+@media (max-width: 900px) {
+    .plante--about     { --h: 110px; }
+    .plante--about-top { --h: 96px; }
+    /* sur mobile le texte va presque jusqu'aux bords : les plantes qui
+       étaient en bas d'un bloc de texte passent aux coins hauts, d'où
+       elles poussent vers le haut, dans l'espace entre les cartes */
+    .plante--intro     { --h: 120px; bottom: auto; top: calc(var(--in) - var(--h) * 0.97); rotate: 36deg; }
+    .plante--pair      { --h: 96px; bottom: auto; top: calc(var(--in) - var(--h) * 0.97); rotate: -40deg; }
+    .plante--psy       { --h: 76px; }
+    .plante--milta     { --h: 110px; bottom: auto; top: calc(var(--in) - var(--h) * 0.97); rotate: 36deg; }
+    .plante--lq        { --h: 100px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-content .plante { transition: none; opacity: 1; scale: 1; }
 }

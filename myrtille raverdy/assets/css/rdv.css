@@ -289,6 +289,7 @@
     gap: 16px;
     padding: 40px;
     border-radius: 28px;
+    background: var(--neu-surface); /* opaque (même teinte que la page) : cache les plantes posées derrière */
     box-shadow: var(--neu-soft-inset);
     color: var(--color-primary);
     text-align: center;
@@ -640,4 +641,30 @@
     .calendar-grid { gap: 6px; }
 
     .form-row { grid-template-columns: 1fr; }
+}
+
+/* ── Plantes décoratives (règles communes : style.css) ──
+   Jamais au-dessus des cartes du haut : elles déborderaient sur le
+   bandeau violet et la barre des étapes. */
+.rdv-calendar,
+.rdv-tarifs { position: relative; }
+
+/* lavande qui sort du bord gauche du calendrier */
+.plante--rdv-cal    { --h: 200px; left: calc(var(--h) * -0.461 + var(--in)); bottom: calc(38% - var(--h) * 0.026); rotate: -22deg; }
+/* ginkgo au coin bas-gauche des tarifs */
+.plante--rdv-tarifs { --h: 170px; left: calc(var(--h) * -0.605 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.046); rotate: -40deg; }
+/* tulipes au coin bas-droit de la colonne de droite (derrière le panneau) */
+.plante--rdv-panel  { --h: 210px; right: calc(var(--h) * -0.512 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.022); rotate: 42deg; }
+
+@media (max-width: 1100px) {
+    .plante--rdv-cal    { --h: 160px; }
+    .plante--rdv-tarifs { --h: 140px; }
+    .plante--rdv-panel  { --h: 170px; }
+}
+@media (max-width: 900px) {
+    /* marges de 16px : une plante au milieu d'un côté n'y montrerait que
+       des bouts de feuilles coupés ; seules restent celles des coins bas */
+    .plante--rdv-cal    { display: none; }
+    .plante--rdv-tarifs { --h: 100px; }
+    .plante--rdv-panel  { --h: 120px; }
 }

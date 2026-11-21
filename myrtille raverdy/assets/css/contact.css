@@ -355,3 +355,30 @@ a.contact-quick__item:focus-visible {
         gap: 24px;
     }
 }
+
+/* ── Plantes décoratives (règles communes : style.css) ──
+   Jamais au-dessus des cartes du haut : elles déborderaient sur le
+   bandeau violet. */
+.contact-left > .neu-card,
+.contact-form-section,
+.contact-zones-card { position: relative; }
+
+/* monstera au coin bas-gauche des horaires */
+.plante--ct-horaires { --h: 170px; left: calc(var(--h) * -0.642 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.05); rotate: -40deg; }
+/* branche d'olivier qui sort du bord droit du formulaire */
+.plante--ct-form     { --h: 210px; right: calc(var(--h) * -0.552 + var(--in)); bottom: calc(40% - var(--h) * 0.025); rotate: 52deg; }
+/* lavande (en miroir) au coin bas-droit des zones, derrière la carte Google */
+.plante--ct-zones    { --h: 180px; right: calc(var(--h) * -0.461 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.026); rotate: 30deg; transform: scaleX(-1); }
+
+@media (max-width: 1100px) {
+    .plante--ct-horaires { --h: 140px; }
+    .plante--ct-form     { --h: 170px; }
+    .plante--ct-zones    { --h: 140px; }
+}
+@media (max-width: 900px) {
+    /* marges de 16px : une plante au milieu d'un côté n'y montrerait que
+       des bouts de feuilles coupés ; seules restent celles des coins bas */
+    .plante--ct-horaires { --h: 100px; }
+    .plante--ct-form     { display: none; }
+    .plante--ct-zones    { --h: 110px; }
+}
