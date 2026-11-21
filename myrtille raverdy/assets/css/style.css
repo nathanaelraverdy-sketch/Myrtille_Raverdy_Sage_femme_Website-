@@ -31,7 +31,7 @@
     /* Ombre des panneaux clairs posés sur le violet (pages superposées) */
     --shadow-page-color: rgba(84, 76, 99, 0.26);
     --shadow-page-size: 22px;
-    --shadow-page: 0 -8px 22px rgba(84, 76, 99, 0.28), 0 14px 30px rgba(30, 22, 44, 0.35); /* haut : sur le violet ; bas : sur le pied de page */
+    --shadow-page: 0 -8px 22px rgba(84, 76, 99, 0.28);
 
     --shadow-soft: 0 4px 24px rgba(60, 30, 30, 0.10);
     --shadow-card: 0 8px 40px rgba(60, 30, 30, 0.13);
@@ -132,7 +132,7 @@ a   { text-decoration: none; color: inherit; }
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 20px 48px;
+    padding: calc(20px + env(safe-area-inset-top)) 48px 20px;
     background: var(--color-bg-hero);
     position: sticky;
     top: 0;
@@ -372,7 +372,7 @@ body:has(.page-panel) {
 .page-panel {
     flex: 1;
     background: var(--color-bg-light);
-    border-radius: var(--radius-page); /* arrondi en bas aussi : il se pose sur le pied de page */
+    border-radius: var(--radius-page) var(--radius-page) 0 0;
     margin-top: -30px;
     padding: 56px 60px;
     position: relative;
@@ -411,7 +411,7 @@ body:has(.page-panel) {
    RESPONSIVE
    ============================================ */
 @media (max-width: 900px) {
-    .navbar { padding: 16px 20px; }
+    .navbar { padding: calc(16px + env(safe-area-inset-top)) 20px 16px; }
     .nav-brand { font-size: 1.05rem; }
     .btn { padding: 10px 20px; font-size: 0.82rem; }
 }
@@ -560,8 +560,8 @@ body:has(.page-panel) {
 
 /* ============================================
    PIED DE PAGE — commun à toutes les pages
-   Le panneau clair s'arrondit en bas et se pose sur le pied de page,
-   qui glisse dessous (même jeu de superposition qu'avec le hero).
+   Le pied de page, arrondi en haut, se pose sur le bas du panneau clair
+   (même jeu de superposition que le panneau clair sur le hero violet).
    Le pied de page n'a pas de bord inférieur : quand on force le scroll
    en bas, le rebond garde sa couleur (classe html.is-at-bottom posée
    par main.js), pour qu'il donne l'impression de continuer au-delà
@@ -585,12 +585,31 @@ html.is-at-bottom body::after {
     pointer-events: none;
 }
 
+/* iPhone (Safari 26) : la zone derrière la barre d'outils flottante est
+   teintée avec la couleur d'un élément fixe collé au bas de l'écran.
+   En bas de page, cette fine bande fixe couleur pied de page lui sert de
+   référence (sinon Safari la laisse mauve). Invisible : elle se confond
+   avec le pied de page qu'elle recouvre. */
+html.is-at-bottom body::before {
+    content: '';
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(4px + env(safe-area-inset-bottom));
+    background: var(--color-footer);
+    z-index: 50;
+    pointer-events: none;
+}
+
 .site-footer {
     position: relative;
-    z-index: 0;
+    z-index: 2;
     overflow: hidden;
-    margin-top: calc(-1 * var(--radius-page));
-    padding: calc(var(--radius-page) + 64px) 60px 56px;
+    margin-top: -30px;
+    border-radius: var(--radius-page) var(--radius-page) 0 0;
+    box-shadow: 0 -8px 22px rgba(var(--neu-ink), 0.22);
+    padding: 64px 60px calc(56px + env(safe-area-inset-bottom));
     background: var(--color-footer);
     color: rgba(255, 255, 255, 0.72);
 }
@@ -682,7 +701,7 @@ html.is-at-bottom body::after {
 
 
 @media (max-width: 900px) {
-    .site-footer { padding: calc(var(--radius-page) + 44px) 20px 40px; }
+    .site-footer { padding: 44px 20px calc(40px + env(safe-area-inset-bottom)); }
     .site-footer__inner { grid-template-columns: 1fr 1fr; gap: 36px 24px; }
     .site-footer__brand { grid-column: 1 / -1; }
 }
@@ -739,10 +758,9 @@ html.is-at-bottom body::after {
     animation: none;
     opacity: clamp(0, calc(var(--pousse, 1) * 4), 1);
     scale: calc(0.3 + 0.7 * var(--pousse, 1)) calc(0.08 + 0.92 * var(--pousse, 1));
-    transition: scale 0.18s linear, opacity 0.18s linear;
-}
-.plantes-scroll.plantes-intro .plante {
-    transition: scale 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+    /* pas de transition CSS : plantes.js lisse lui-même la pousse image par
+       image (une transition relancée à chaque image saccade en scroll rapide) */
+    will-change: scale, opacity;
 }
 /* point de rotation / d'étirement = la racine de chaque dessin */
 .plante[src*="plante-bouquet"]    { transform-origin: 46% 94%; }
