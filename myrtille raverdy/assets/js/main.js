@@ -458,3 +458,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }).catch(() => { /* on garde l'image fixe */ });
     });
 });
+
+// ============================================
+// Navbar : si l'écran est trop étroit pour afficher le nom
+// « Myrtille Raverdy » sur une ligne à côté des boutons, on le met
+// sur 2 lignes (.navbar--name-2l) ; et si ça ne tient toujours pas,
+// on ne garde que le colibri (.navbar--compact).
+// ============================================
+(() => {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar || !navbar.querySelector('.nav-brand__name')) return;
+    const fit = () => {
+        const name = navbar.querySelector('.nav-brand__name');
+        const btns = navbar.querySelectorAll('.btn');
+        // trop serré si le nom touche le 1er bouton, ou si le dernier bouton
+        // mord sur la marge droite de la barre
+        const overflows = () => {
+            if (!btns.length) return navbar.scrollWidth > navbar.clientWidth;
+            const cs = getComputedStyle(navbar);
+            const limit = navbar.getBoundingClientRect().right - parseFloat(cs.paddingRight);
+            return name.getBoundingClientRect().right + 8 > btns[0].getBoundingClientRect().left ||
+                btns[btns.length - 1].getBoundingClientRect().right > limit + 0.5;
+        };
+        navbar.classList.remove('navbar--name-2l', 'navbar--compact');
+        if (!overflows()) return;                       // 1 ligne
+        navbar.classList.add('navbar--name-2l');
+        if (!overflows()) return;                       // 2 lignes
+        navbar.classList.replace('navbar--name-2l', 'navbar--compact'); // colibri seul
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();

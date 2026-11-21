@@ -890,21 +890,7 @@
    d'empilement, les plantes en z-index -1 peuvent passer derrière elles */
 .main-content .reveal.visible { transform: none; }
 
-/* règles communes des plantes : voir style.css ; ici elles n'apparaissent
-   qu'avec leur carte (classe .visible posée au scroll par main.js) */
-.main-content .plante {
-    animation: none;
-    opacity: 0;
-    scale: 0.6;
-    transition: opacity 0.8s ease 0.5s, scale 1.1s var(--ease-spring) 0.5s;
-}
-.visible .plante,
-.visible > .plante,
-.section-about:has(.visible) > .plante {
-    opacity: 1;
-    scale: 1;
-}
-
+/* règles communes des plantes et pousse au scroll : voir style.css */
 
 /* Mon parcours : bouquet au coin bas-gauche, fougère au coin haut-droit */
 .plante--about     { --h: 210px; left:  calc(var(--h) * -0.413 + var(--in)); bottom: calc(var(--in) - var(--h) * 0.06); rotate: -32deg; }
@@ -944,6 +930,4 @@
     .plante--lq        { --h: 100px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .main-content .plante { transition: none; opacity: 1; scale: 1; }
-}
+

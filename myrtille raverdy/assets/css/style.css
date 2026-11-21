@@ -195,6 +195,7 @@ a   { text-decoration: none; color: inherit; }
     color: var(--color-white);
     letter-spacing: 0.02em;
     margin-right: auto;
+    flex-shrink: 0;            /* ne se tasse jamais sous les boutons (main.js choisit 1 ligne / 2 lignes / colibri) */
     transition: opacity var(--transition);
 }
 .nav-brand:hover { opacity: 0.8; }
@@ -233,8 +234,14 @@ a   { text-decoration: none; color: inherit; }
 .nav-brand__logo {
     height: 32px;
     width: auto;
+    flex-shrink: 0;
     display: block;
 }
+.nav-brand__name { white-space: nowrap; }
+/* Selon la place (main.js) : nom sur 1 ligne, sinon sur 2 lignes
+   (« Myrtille » / « Raverdy »), sinon seul le colibri reste. */
+.navbar--name-2l .nav-brand__name { white-space: normal; width: min-content; line-height: 1.1; }
+.navbar--compact .nav-brand__name { display: none; }
 
 /* Colibri : quand il se repose dans la navbar après son envol
    (assets/js/colibri.js), le nom s'illumine brièvement. */
@@ -261,6 +268,7 @@ a   { text-decoration: none; color: inherit; }
     font-size: 0.9rem;
     font-weight: 400;
     letter-spacing: 0.01em;
+    white-space: nowrap;           /* jamais de texte de bouton sur 2 lignes */
     cursor: pointer;
     border: none;
     background: var(--neu-surface);
@@ -722,3 +730,29 @@ html.is-at-bottom body::after {
 @media (prefers-reduced-motion: reduce) {
     .plante { animation: none; }
 }
+
+/* Pousse au fil du scroll (plantes.js pose --pousse de 0 à 1) :
+   la plante s'étire depuis sa racine, plus en hauteur qu'en largeur,
+   comme une tige qui sort de terre. Sans JavaScript, l'animation
+   d'apparition ci-dessus reste en place. */
+.plantes-scroll .plante {
+    animation: none;
+    opacity: clamp(0, calc(var(--pousse, 1) * 4), 1);
+    scale: calc(0.3 + 0.7 * var(--pousse, 1)) calc(0.08 + 0.92 * var(--pousse, 1));
+    transition: scale 0.18s linear, opacity 0.18s linear;
+}
+.plantes-scroll.plantes-intro .plante {
+    transition: scale 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+}
+/* point de rotation / d'étirement = la racine de chaque dessin */
+.plante[src*="plante-bouquet"]    { transform-origin: 46% 94%; }
+.plante[src*="plante-fougere"]    { transform-origin: 51% 96%; }
+.plante[src*="plante-myrtille"]   { transform-origin: 54% 97%; }
+.plante[src*="plante-herbes"]     { transform-origin: 54% 97%; }
+.plante[src*="plante-eucalyptus"] { transform-origin: 32% 97%; }
+.plante[src*="plante-pousse"]     { transform-origin: 51% 88%; }
+.plante[src*="plante-lavande"]    { transform-origin: 55% 97%; }
+.plante[src*="plante-tulipes"]    { transform-origin: 48% 98%; }
+.plante[src*="plante-ginkgo"]     { transform-origin: 53% 95%; }
+.plante[src*="plante-monstera"]   { transform-origin: 51% 95%; }
+.plante[src*="plante-olivier"]    { transform-origin: 25% 97%; }
